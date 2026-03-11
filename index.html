@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>S.A. DRINKS - PREMIUM</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         body { background-color: #f0f2f5; color: #1c1e21; font-family: sans-serif; margin: 0; padding: 10px; display: flex; justify-content: center; }
         #app { max-width: 450px; width: 100%; }
@@ -16,7 +18,7 @@
         .nome { font-size: 18px; font-weight: bold; margin-bottom: 5px; display: block; }
         .ingredientes { font-size: 13px; color: #65676b; line-height: 1.4; margin-bottom: 15px; display: block; }
         .btn { background: #000; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
-        #status { display: none; text-align: center; margin-top: 50px; font-size: 20px; font-weight: bold; }
+        #status { display: none; text-align: center; margin-top: 50px; font-size: 20px; font-weight: bold; color: #28a745; }
     </style>
 </head>
 <body>
@@ -50,19 +52,38 @@
                 <button class="btn" onclick="pedir('TROPICAL YELLOW')">Pedir Drink</button>
             </div>
         </div>
+    </div>
 
-        <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?w=500')"></div>
-            <div class="info">
-                <span class="nome">GREEN DETOX</span>
-                <span class="ingredientes">Maçã Verde, Hortelã e Água com Gás. Leve e ultra refrescante.</span>
-                <button class="btn" onclick="pedir('GREEN DETOX')">Pedir Drink</button>
-            </div>
-        </div>
+    <div id="status">PEDIDO ENVIADO!<br><small>Aguarde o barman chamar.</small></div>
 
-        <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1592663527359-cf6642f54cff?w=500')"></div>
-            <div class="info">
-                <span class="nome">COFFEE TONIC</span>
-                <span class="ingredientes">Café Concentrado e Tônica Premium
-                    
+    <script>
+        // Configuração do seu Firebase
+        const firebaseConfig = {
+            databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function pedir(drinkNome) {
+            const nome = document.getElementById('nomeCliente').value;
+            if (!nome) {
+                alert("Por favor, digite seu nome antes de pedir!");
+                return;
+            }
+
+            const novoPedido = database.ref('pedidos').push();
+            novoPedido.set({
+                cliente: nome,
+                drink: drinkNome,
+                timestamp: Date.now(),
+                status: "pendente"
+            }).then(() => {
+                document.getElementById('app').style.display = 'none';
+                document.getElementById('status').style.display = 'block';
+            }).catch((error) => {
+                alert("Erro ao enviar pedido: " + error.message);
+            });
+        }
+    </script>
+</body>
+</html>
