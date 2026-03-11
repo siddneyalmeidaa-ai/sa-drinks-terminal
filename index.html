@@ -3,49 +3,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.A. DRINKS - SUPREMACIA</title>
+    <title>S.A. DRINKS - CARDÁPIO</title>
     <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; padding: 15px; text-align: center; }
-        .btn { background: #1a1a1a; border: 2px solid #0f0; color: #0f0; padding: 15px; margin: 8px 0; width: 100%; border-radius: 8px; font-weight: bold; font-size: 16px; }
-        .card { border: 1px solid #333; padding: 15px; margin: 10px 0; border-radius: 8px; background: #111; text-align: left; border-left: 5px solid #0f0; }
-        .status-msg { font-size: 22px; margin-top: 20px; color: gold; font-weight: bold; }
-        input { background: #111; border: 1px solid #0f0; color: #fff; padding: 12px; width: 90%; margin-bottom: 15px; border-radius: 5px; }
-        .admin-view { color: #fff; background: #222; padding: 10px; border-radius: 5px; margin-bottom: 20px; }
+        body { background: #000; color: #0f0; font-family: sans-serif; padding: 10px; text-align: center; }
+        .titulo { font-family: 'Courier New', monospace; font-size: 24px; margin-bottom: 20px; }
+        input { background: #111; border: 1px solid #0f0; color: #fff; padding: 15px; width: 90%; margin-bottom: 20px; border-radius: 8px; font-size: 16px; }
+        
+        /* Estilo dos Cards de Drink */
+        .drink-card { 
+            background: #111; border: 1px solid #333; border-radius: 12px; 
+            margin-bottom: 20px; overflow: hidden; text-align: left;
+            transition: 0.3s;
+        }
+        .drink-card:active { transform: scale(0.98); border-color: #0f0; }
+        
+        .drink-img { 
+            width: 100%; height: 150px; background: #222; 
+            display: flex; align-items: center; justify-content: center; font-size: 40px;
+        }
+        
+        .drink-info { padding: 15px; }
+        .drink-nome { font-size: 20px; font-weight: bold; margin-bottom: 5px; display: block; }
+        .drink-ingredientes { color: #888; font-size: 13px; line-height: 1.4; margin-bottom: 15px; display: block; }
+        
+        .btn-pedir { 
+            background: #0f0; color: #000; border: none; padding: 12px; 
+            width: 100%; font-weight: bold; border-radius: 5px; font-size: 14px;
+        }
+
+        #status-msg { font-size: 22px; margin-top: 50px; color: gold; font-weight: bold; display: none; }
     </style>
 </head>
 <body>
 
-    <div id="app">
-        <h2>🍹 S.A. DRINKS</h2>
-        <p style="color: #888;">Digite seu nome e escolha seu drink:</p>
-        <input type="text" id="nomeCliente" placeholder="SEU NOME AQUI">
-        
-        <div id="menu">
-            <button class="btn" onclick="pedir('🟦 QUANTUM BLUE')">QUANTUM BLUE</button>
-            <button class="btn" onclick="pedir('🌸 PINK S.A.')">PINK S.A.</button>
-            <button class="btn" onclick="pedir('🟡 TROPICAL YELLOW')">TROPICAL YELLOW</button>
-            <button class="btn" onclick="pedir('🟢 GREEN DETOX')">GREEN DETOX</button>
-            <button class="btn" onclick="pedir('☕ COFFEE TONIC')">COFFEE TONIC</button>
-            <button class="btn" onclick="pedir('🍑 SUNSET PEACH')">SUNSET PEACH</button>
+    <div id="container-principal">
+        <div class="titulo">🍹 S.A. DRINKS</div>
+        <input type="text" id="nomeCliente" placeholder="DIGITE SEU NOME PARA PEDIR">
+
+        <div class="drink-card">
+            <div class="drink-img" style="border-bottom: 3px solid #0000ff;">🟦</div>
+            <div class="drink-info">
+                <span class="drink-nome" style="color: #00bfff;">QUANTUM BLUE</span>
+                <span class="drink-ingredientes">Curaçau Blue (Sem Álcool), Suco de Limão Taiti, Soda Limonada e Gelo.</span>
+                <button class="btn-pedir" onclick="fazerPedido('QUANTUM BLUE')">PEDIR ESTE</button>
+            </div>
         </div>
-        <div id="status-msg"></div>
+
+        <div class="drink-card">
+            <div class="drink-img" style="border-bottom: 3px solid #ff1493;">🌸</div>
+            <div class="drink-info">
+                <span class="drink-nome" style="color: #ff69b4;">PINK S.A.</span>
+                <span class="drink-ingredientes">Xarope de Morango, Alecrim Fresco, Morangos Macerados e Água Tônica.</span>
+                <button class="btn-pedir" onclick="fazerPedido('PINK S.A.')">PEDIR ESTE</button>
+            </div>
+        </div>
+
+        <div class="drink-card">
+            <div class="drink-img" style="border-bottom: 3px solid #ffd700;">🟡</div>
+            <div class="drink-info">
+                <span class="drink-nome" style="color: #ffd700;">TROPICAL YELLOW</span>
+                <span class="drink-ingredientes">Xarope de Gengibre, Limão Siciliano, Xarope de Açúcar e Água com Gás.</span>
+                <button class="btn-pedir" onclick="fazerPedido('TROPICAL YELLOW')">PEDIR ESTE</button>
+            </div>
+        </div>
+
+        <div class="drink-card">
+            <div class="drink-img" style="border-bottom: 3px solid #32cd32;">🟢</div>
+            <div class="drink-info">
+                <span class="drink-nome" style="color: #32cd32;">GREEN DETOX</span>
+                <span class="drink-ingredientes">Xarope de Maçã Verde, Hortelã Fresca, Limão e Água com Gás.</span>
+                <button class="btn-pedir" onclick="fazerPedido('GREEN DETOX')">PEDIR ESTE</button>
+            </div>
+        </div>
+
+        <div class="drink-card">
+            <div class="drink-img" style="border-bottom: 3px solid #8b4513;">☕</div>
+            <div class="drink-info">
+                <span class="drink-nome" style="color: #cd853f;">COFFEE TONIC</span>
+                <span class="drink-ingredientes">Café Arábica Gelado, Xarope de Caramelo e Água Tônica Premium.</span>
+                <button class="btn-pedir" onclick="fazerPedido('COFFEE TONIC')">PEDIR ESTE</button>
+            </div>
+        </div>
+
+        <div class="drink-card">
+            <div class="drink-img" style="border-bottom: 3px solid #ff4500;">🍑</div>
+            <div class="drink-info">
+                <span class="drink-nome" style="color: #ff8c00;">SUNSET PEACH (Batido)</span>
+                <span class="drink-ingredientes">Purê de Pêssego, Limão Siciliano e Xarope de Açúcar. Batido na Coqueteleira.</span>
+                <button class="btn-pedir" onclick="fazerPedido('SUNSET PEACH')">PEDIR ESTE</button>
+            </div>
+        </div>
     </div>
 
+    <div id="status-msg"></div>
+
     <script>
-        // Função para simular o pedido na Fila
-        function pedir(drink) {
+        function fazerPedido(drink) {
             const nome = document.getElementById('nomeCliente').value;
-            if(!nome) { alert("Por favor, digite seu nome!"); return; }
+            if(!nome) { alert("Por favor, digite seu nome primeiro!"); return; }
             
-            document.getElementById('menu').style.display = 'none';
-            document.getElementById('nomeCliente').style.display = 'none';
-            document.getElementById('status-msg').innerHTML = `⏳ Olá ${nome}!<br>Estamos preparando seu ${drink}.<br>Aguarde nesta tela...`;
+            document.getElementById('container-principal').style.display = 'none';
+            const msg = document.getElementById('status-msg');
+            msg.style.display = 'block';
+            msg.innerHTML = `⏳ OPA, ${nome}!<br>Seu ${drink} entrou na nossa fila.<br>Aguarde o aviso aqui na tela.`;
             
-            // Simulação de tempo de preparo (Para o GitHub Pages)
+            // Simulação de tempo de preparo
             setTimeout(() => {
-                document.getElementById('status-msg').innerHTML = `🌟 PRONTO, ${nome}!<br>Seu ${drink} está no balcão.<br>Pode vir buscar!`;
+                msg.innerHTML = `🌟 PRONTO, ${nome}!<br>Seu ${drink} está no balcão.<br>Pode vir buscar!`;
                 if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-            }, 10000); // 10 segundos para teste
+            }, 8000); 
         }
     </script>
 </body>
