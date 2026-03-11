@@ -7,38 +7,81 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
-        h1, h2 { color: #28a745; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        .pedido-card { background: #1e1e1e; border-left: 5px solid #28a745; padding: 20px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .cliente-nome { color: #28a745; font-weight: bold; font-size: 22px; }
-        .btn-ready { background: #28a745; color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
-        .btn-ready:hover { background: #218838; transform: scale(1.05); }
+        body { font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: white; padding: 15px; }
+        h1, h2 { color: #28a745; text-transform: uppercase; border-bottom: 2px solid #1a1a1a; padding-bottom: 10px; letter-spacing: 1px; }
         
-        /* Estilo do Relatório */
-        #relatorio { background: #1e1e1e; padding: 20px; border-radius: 8px; margin-top: 50px; border-top: 5px solid #ffc107; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 15px; }
-        .stat-box { background: #2c2c2c; padding: 15px; border-radius: 8px; text-align: center; }
-        .stat-number { display: block; font-size: 30px; font-weight: bold; color: #ffc107; }
+        #lista-pedidos { display: grid; gap: 10px; }
+        
+        .pedido-card { 
+            background: #161616; 
+            border-left: 6px solid #28a745; 
+            padding: 15px; 
+            border-radius: 10px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+
+        .cliente-nome { color: #28a745; font-weight: bold; font-size: 20px; display: block; margin-bottom: 4px; }
+        .drink-info { font-size: 16px; color: #ddd; }
+        
+        /* Estilo do Tempo */
+        .tempo-container { margin-top: 8px; font-size: 13px; color: #888; display: flex; gap: 15px; }
+        .cronometro { font-weight: bold; padding: 2px 6px; border-radius: 4px; background: #222; }
+
+        .btn-ready { 
+            background: #28a745; color: white; border: none; padding: 12px 20px; 
+            border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; 
+        }
+        
+        /* Relatório */
+        #relatorio { background: #111; padding: 20px; border-radius: 12px; margin-top: 40px; border: 1px solid #333; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 15px; }
+        .stat-box { background: #1c1c1c; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #222; }
+        .stat-number { display: block; font-size: 28px; font-weight: bold; color: #ffc107; }
     </style>
 </head>
 <body>
     <h1>🍸 Pedidos Pendentes</h1>
-    <div id="lista-pedidos">Buscando pedidos...</div>
+    <div id="lista-pedidos">Sincronizando com a nuvem...</div>
 
     <div id="relatorio">
-        <h2>📊 Relatório da Noite (S.A. Drinks)</h2>
+        <h2>📊 Relatório da Noite (S.A. DRINKS)</h2>
         <div class="stats-grid" id="stats-vendas">
             <div class="stat-box">
                 <span class="stat-number" id="total-geral">0</span>
-                Total de Drinks
+                Total Geral
             </div>
-            </div>
+        </div>
     </div>
 
     <script>
         const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+
+        // Função para calcular o tempo corrido
+        function calcularTempo(timestamp) {
+            if(!timestamp) return "0m";
+            const agora = new Date().getTime();
+            const diff = Math.floor((agora - timestamp) / 60000); // Diferença em minutos
+            return diff;
+        }
+
+        // Loop para atualizar os cronômetros na tela a cada 30 segundos
+        setInterval(() => {
+            document.querySelectorAll('.cronometro').forEach(span => {
+                const ts = span.getAttribute('data-ts');
+                const min = calcularTempo(parseInt(ts));
+                span.innerText = min + " min atrás";
+                
+                // Feedback visual de urgência
+                if(min >= 10) span.style.color = "#ffc107"; // Alerta: Amarelo
+                if(min >= 15) span.style.color = "#e63946"; // Crítico: Vermelho
+            });
+        }, 30000);
 
         db.ref('pedidos').on('value', (snapshot) => {
             const lista = document.getElementById('lista-pedidos');
@@ -51,27 +94,36 @@
 
             snapshot.forEach((item) => {
                 const p = item.val();
+                const id = item.key;
                 
-                // Lógica de Pedidos Pendentes
                 if(p.status === "pendente") {
+                    // Se o pedido não tiver timestamp, ele cria um agora para não bugar
+                    const ts = p.timestamp || new Date().getTime();
+                    const horaFormatada = new Date(ts).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+
                     lista.innerHTML += `
                         <div class="pedido-card">
-                            <div><span class="cliente-nome">${p.cliente}</span><br>Drink: <b>${p.drink}</b></div>
-                            <button class="btn-ready" onclick="finalizar('${item.key}')">PRONTO</button>
+                            <div>
+                                <span class="cliente-nome">${p.cliente}</span>
+                                <span class="drink-info">Drink: <b>${p.drink}</b></span>
+                                <div class="tempo-container">
+                                    <span>🕒 Solicitado às ${horaFormatada}</span>
+                                    <span class="cronometro" data-ts="${ts}">${calcularTempo(ts)} min atrás</span>
+                                </div>
+                            </div>
+                            <button class="btn-ready" onclick="finalizar('${id}')">PRONTO</button>
                         </div>`;
                 }
 
-                // Lógica do Relatório (Contar apenas os prontos)
                 if(p.status === "PRONTO") {
                     totalGeral++;
                     contagemDrinks[p.drink] = (contagemDrinks[p.drink] || 0) + 1;
                 }
             });
 
-            // Atualizar o visual do Relatório
             totalGeralElement.innerText = totalGeral;
             
-            // Limpar e reconstruir os boxes de drinks específicos
+            // Reconstrução do Relatório
             const boxesAntigos = document.querySelectorAll('.stat-drink');
             boxesAntigos.forEach(box => box.remove());
 
@@ -83,9 +135,7 @@
                     </div>`;
             }
 
-            if (lista.innerHTML === "") {
-                lista.innerHTML = "<p style='color:#888'>Nenhum pedido pendente no momento.</p>";
-            }
+            if (lista.innerHTML === "") lista.innerHTML = "<p style='color:#555; text-align:center;'>Aguardando novos pedidos...</p>";
         });
 
         function finalizar(id) {
