@@ -18,70 +18,59 @@
         .nome { font-size: 18px; font-weight: bold; margin-bottom: 5px; display: block; }
         .ingredientes { font-size: 13px; color: #65676b; line-height: 1.4; margin-bottom: 15px; display: block; }
         .btn { background: #000; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
-        #status { display: none; text-align: center; margin-top: 50px; font-size: 20px; font-weight: bold; color: #28a745; }
+        #status-area { display: none; text-align: center; margin-top: 50px; }
+        .aviso { font-size: 22px; font-weight: bold; color: #28a745; }
     </style>
 </head>
 <body>
     <div id="app">
-        <div class="header"><div class="logo">S.A. DRINKS</div><div style="font-size: 10px; color: #999;">MOBILE EXPERIENCE</div></div>
+        <div class="header"><div class="logo">S.A. DRINKS</div></div>
         <input type="text" id="nomeCliente" class="input-nome" placeholder="Seu nome para o pedido...">
-
+        
         <div class="card">
             <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')"></div>
             <div class="info">
                 <span class="nome">QUANTUM BLUE</span>
-                <span class="ingredientes">Curaçau Blue, Limão Taiti e Soda. Refrescante e visual azul vibrante.</span>
+                <span class="ingredientes">Curaçau Blue, Limão Taiti e Soda.</span>
                 <button class="btn" onclick="pedir('QUANTUM BLUE')">Pedir Drink</button>
             </div>
         </div>
-
-        <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1544145945-f90425340c7e?w=500')"></div>
-            <div class="info">
-                <span class="nome">PINK S.A.</span>
-                <span class="ingredientes">Morango, Alecrim e Tônica. O equilíbrio perfeito entre o doce e o erval.</span>
-                <button class="btn" onclick="pedir('PINK S.A.')">Pedir Drink</button>
-            </div>
         </div>
 
-        <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1587223962930-cb7f31384c19?w=500')"></div>
-            <div class="info">
-                <span class="nome">TROPICAL YELLOW</span>
-                <span class="ingredientes">Gengibre, Limão Siciliano e Água com Gás. Cítrico e energizante.</span>
-                <button class="btn" onclick="pedir('TROPICAL YELLOW')">Pedir Drink</button>
-            </div>
-        </div>
+    <div id="status-area">
+        <div id="msg-status" class="aviso">PEDIDO ENVIADO!</div>
+        <p id="msg-detalhe">Aguarde o barman chamar seu nome.</p>
     </div>
 
-    <div id="status">PEDIDO ENVIADO!<br><small>Aguarde o barman chamar.</small></div>
-
     <script>
-        // Configuração do seu Firebase
-        const firebaseConfig = {
-            databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/"
-        };
+        const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         function pedir(drinkNome) {
             const nome = document.getElementById('nomeCliente').value;
-            if (!nome) {
-                alert("Por favor, digite seu nome antes de pedir!");
-                return;
-            }
+            if (!nome) { alert("Digite seu nome!"); return; }
 
             const novoPedido = database.ref('pedidos').push();
+            const idPedido = novoPedido.key;
+
             novoPedido.set({
                 cliente: nome,
                 drink: drinkNome,
-                timestamp: Date.now(),
                 status: "pendente"
             }).then(() => {
                 document.getElementById('app').style.display = 'none';
-                document.getElementById('status').style.display = 'block';
-            }).catch((error) => {
-                alert("Erro ao enviar pedido: " + error.message);
+                document.getElementById('status-area').style.display = 'block';
+                
+                // ESCUTA O STATUS DESSE PEDIDO ESPECÍFICO
+                database.ref('pedidos/' + idPedido).on('value', (snapshot) => {
+                    const dados = snapshot.val();
+                    if (dados && dados.status === "PRONTO") {
+                        document.getElementById('msg-status').innerHTML = "🔥 DRINK PRONTO! 🔥";
+                        document.getElementById('msg-detalhe').innerHTML = "Pode vir buscar no balcão, " + dados.cliente + "!";
+                        document.getElementById('msg-status').style.color = "#ff4757";
+                    }
+                });
             });
         }
     </script>
