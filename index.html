@@ -3,36 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.A. DRINKS - PREMIUM</title>
+    <title>S.A. DRINKS - EXPERIENCE</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        body { background-color: #f0f2f5; color: #1c1e21; font-family: sans-serif; margin: 0; padding: 10px; display: flex; justify-content: center; }
-        #app { max-width: 450px; width: 100%; }
-        .header { background: #fff; padding: 20px; text-align: center; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .logo { font-size: 24px; font-weight: bold; color: #000; }
-        .input-nome { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
-        .card { background: #fff; border-radius: 15px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-        .img-container { width: 100%; height: 200px; background-size: cover; background-position: center; }
-        .info { padding: 15px; }
-        .nome { font-size: 18px; font-weight: bold; margin-bottom: 5px; display: block; }
-        .ingredientes { font-size: 13px; color: #65676b; line-height: 1.4; margin-bottom: 15px; display: block; }
-        .btn { background: #000; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
-        #status-area { display: none; text-align: center; margin-top: 50px; padding: 20px; background: white; border-radius: 15px; }
-        .aviso { font-size: 22px; font-weight: bold; color: #28a745; margin-bottom: 10px; }
+        :root { --primary: #28a745; --dark: #0a0a0a; --card: #ffffff; }
+        body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
+        #app { max-width: 450px; margin: auto; }
+        .header { text-align: center; padding: 30px 0; border-bottom: 1px solid #222; margin-bottom: 20px; }
+        .logo { font-size: 28px; font-weight: bold; letter-spacing: 4px; color: var(--primary); }
+        
+        .input-nome { width: 100%; padding: 18px; margin-bottom: 25px; border: 1px solid #333; background: #111; color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
+        .input-nome:focus { border-color: var(--primary); }
+
+        .card { background: #111; border-radius: 18px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; transition: 0.3s; }
+        .img-container { width: 100%; height: 220px; background-size: cover; background-position: center; position: relative; }
+        .tag-zero { position: absolute; top: 10px; right: 10px; background: #ff9f43; color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        
+        .info { padding: 20px; }
+        .nome { font-size: 20px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px; letter-spacing: 1px; }
+        .ingredientes { font-size: 13px; color: #aaa; line-height: 1.5; margin-bottom: 20px; display: block; min-height: 40px; }
+        
+        .btn { background: var(--primary); color: #fff; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; transition: 0.2s; }
+        .btn:active { transform: scale(0.98); opacity: 0.8; }
+
+        #status-area { display: none; text-align: center; margin-top: 80px; padding: 30px; background: #111; border-radius: 20px; border: 1px solid var(--primary); }
+        .aviso { font-size: 24px; font-weight: bold; color: var(--primary); margin-bottom: 15px; }
     </style>
 </head>
 <body>
+
     <div id="app">
         <div class="header"><div class="logo">S.A. DRINKS</div></div>
-        <input type="text" id="nomeCliente" class="input-nome" placeholder="Seu nome para o pedido...">
+        
+        <label style="font-size: 12px; color: #666; margin-left: 5px;">IDENTIFICAÇÃO:</label>
+        <input type="text" id="nomeCliente" class="input-nome" placeholder="Seu nome para o brinde...">
 
         <div class="card">
             <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')"></div>
             <div class="info">
                 <span class="nome">QUANTUM BLUE</span>
-                <span class="ingredientes">Curaçau Blue, Limão Taiti e Soda. Visual azul vibrante.</span>
-                <button class="btn" onclick="pedir('QUANTUM BLUE')">Pedir Drink</button>
+                <span class="ingredientes">Gin Premium, Curaçau Blue, Limão Siciliano e Tônica. O clássico tecnológico.</span>
+                <button class="btn" onclick="pedir('QUANTUM BLUE')">Solicitar Drink</button>
             </div>
         </div>
 
@@ -40,8 +52,8 @@
             <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1544145945-f90425340c7e?w=500')"></div>
             <div class="info">
                 <span class="nome">PINK S.A.</span>
-                <span class="ingredientes">Morango, Alecrim e Tônica. Doce e erval.</span>
-                <button class="btn" onclick="pedir('PINK S.A.')">Pedir Drink</button>
+                <span class="ingredientes">Morango, Alecrim e Tônica. Refrescante, aromático e levemente adocicado.</span>
+                <button class="btn" onclick="pedir('PINK S.A.')">Solicitar Drink</button>
             </div>
         </div>
 
@@ -49,34 +61,45 @@
             <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1587223962930-cb7f31384c19?w=500')"></div>
             <div class="info">
                 <span class="nome">TROPICAL YELLOW</span>
-                <span class="ingredientes">Gengibre, Limão Siciliano e Água com Gás. Cítrico.</span>
-                <button class="btn" onclick="pedir('TROPICAL YELLOW')">Pedir Drink</button>
+                <span class="ingredientes">Abacaxi, Gengibre e Água com Gás. Cítrico com toque picante.</span>
+                <button class="btn" onclick="pedir('TROPICAL YELLOW')">Solicitar Drink</button>
             </div>
         </div>
 
         <div class="card">
             <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?w=500')"></div>
             <div class="info">
-                <span class="nome">GREEN DETOX</span>
-                <span class="ingredientes">Maçã Verde, Hortelã e Água com Gás. Leve.</span>
-                <button class="btn" onclick="pedir('GREEN DETOX')">Pedir Drink</button>
+                <span class="nome">RED SUPREME</span>
+                <span class="ingredientes">Frutas Vermelhas, Gin e Soda. Explosão de sabor e cor vibrante.</span>
+                <button class="btn" onclick="pedir('RED SUPREME')">Solicitar Drink</button>
             </div>
         </div>
 
         <div class="card">
             <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1592663527359-cf6642f54cff?w=500')"></div>
             <div class="info">
-                <span class="nome">COFFEE TONIC</span>
-                <span class="ingredientes">Café Concentrado e Tônica Premium. Diferenciado.</span>
-                <button class="btn" onclick="pedir('COFFEE TONIC')">Pedir Drink</button>
+                <span class="nome">GREEN VIBE</span>
+                <span class="ingredientes">Maçã Verde, Hortelã e Soda. O equilíbrio perfeito entre o azedo e o doce.</span>
+                <button class="btn" onclick="pedir('GREEN VIBE')">Solicitar Drink</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1499638673689-79a0b5115d87?w=500')">
+                <div class="tag-zero">0% ÁLCOOL</div>
+            </div>
+            <div class="info">
+                <span class="nome">SUNSET PEACH</span>
+                <span class="ingredientes">Pêssego, Suco de Laranja e Grenadine. Visual degradê, sabor tropical intenso.</span>
+                <button class="btn" style="background: #ff9f43; color: #000;" onclick="pedir('SUNSET PEACH')">Solicitar Drink</button>
             </div>
         </div>
     </div>
 
     <div id="status-area">
-        <div id="msg-status" class="aviso">PEDIDO ENVIADO!</div>
-        <p id="msg-detalhe">Aguarde o barman chamar seu nome.</p>
-        <button class="btn" onclick="location.reload()">Novo Pedido</button>
+        <div id="msg-status" class="aviso">PEDIDO EM PREPARO!</div>
+        <p id="msg-detalhe" style="color: #888;">Nosso barman já recebeu sua solicitação. Aguarde um instante.</p>
+        <button class="btn" style="margin-top: 30px; background: #222;" onclick="location.reload()">Novo Pedido</button>
     </div>
 
     <script>
@@ -85,31 +108,33 @@
         const database = firebase.database();
 
         function pedir(drinkNome) {
-            const nome = document.getElementById('nomeCliente').value;
-            if (!nome) { alert("Por favor, digite seu nome!"); return; }
+            const nomeInput = document.getElementById('nomeCliente').value.trim();
+            if (!nomeInput) { alert("Por favor, digite seu nome primeiro!"); return; }
 
-            const novoPedido = database.ref('pedidos').push();
-            const idPedido = novoPedido.key;
+            const novoPedidoRef = database.ref('pedidos').push();
+            const idPedido = novoPedidoRef.key;
 
-            novoPedido.set({
-                cliente: nome,
+            novoPedidoRef.set({
+                cliente: nomeInput,
                 drink: drinkNome,
                 status: "pendente",
-                timestamp: Date.now()
+                timestamp: Date.now() // ESSENCIAL PARA O CRONÔMETRO DO BARMAN
             }).then(() => {
                 document.getElementById('app').style.display = 'none';
                 document.getElementById('status-area').style.display = 'block';
                 
-                // ESCUTA SE VOCÊ CLICOU EM "PRONTO" NO PAINEL
+                // Monitoramento em tempo real do status
                 database.ref('pedidos/' + idPedido).on('value', (snapshot) => {
                     const dados = snapshot.val();
                     if (dados && dados.status === "PRONTO") {
-                        document.getElementById('msg-status').innerHTML = "🔥 SEU DRINK ESTÁ PRONTO! 🔥";
+                        document.getElementById('msg-status').innerHTML = "🔥 ESTÁ PRONTO! 🔥";
                         document.getElementById('msg-status').style.color = "#ff4757";
-                        document.getElementById('msg-detalhe').innerHTML = "Pode vir buscar agora, " + dados.cliente + "!";
+                        document.getElementById('msg-detalhe').innerHTML = dados.cliente + ", venha retirar seu <b>" + dados.drink + "</b> no balcão!";
+                        // Feedback tátil se disponível
+                        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
                     }
                 });
-            });
+            }).catch(err => alert("Erro ao conectar: " + err));
         }
     </script>
 </body>
