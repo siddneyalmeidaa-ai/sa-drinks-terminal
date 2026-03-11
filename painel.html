@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAINEL DO BARMAN - S.A. DRINKS</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
+        .pedido-card { background: #1e1e1e; border-left: 5px solid #28a745; padding: 20px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .cliente-nome { color: #28a745; font-weight: bold; font-size: 22px; }
+        .btn-ready { background: #28a745; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>🍸 Pedidos Pendentes</h1>
+    <div id="lista-pedidos">Buscando...</div>
+
+    <script>
+        const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        db.ref('pedidos').on('value', (snapshot) => {
+            const lista = document.getElementById('lista-pedidos');
+            lista.innerHTML = "";
+            snapshot.forEach((item) => {
+                const p = item.val();
+                if(p.status === "pendente") {
+                    lista.innerHTML += `
+                        <div class="pedido-card">
+                            <div><span class="cliente-nome">${p.cliente}</span><br>Drink: ${p.drink}</div>
+                            <button class="btn-ready" onclick="finalizar('${item.key}')">PRONTO</button>
+                        </div>`;
+                }
+            });
+        });
+
+        function finalizar(id) {
+            db.ref('pedidos/' + id).update({ status: "PRONTO" });
+        }
+    </script>
+</body>
+</html>
