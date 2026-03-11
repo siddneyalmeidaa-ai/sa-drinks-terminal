@@ -8,14 +8,32 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         body { font-family: sans-serif; background: #121212; color: white; padding: 20px; }
-        .pedido-card { background: #1e1e1e; border-left: 5px solid #28a745; padding: 20px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        h1, h2 { color: #28a745; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .pedido-card { background: #1e1e1e; border-left: 5px solid #28a745; padding: 20px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
         .cliente-nome { color: #28a745; font-weight: bold; font-size: 22px; }
-        .btn-ready { background: #28a745; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .btn-ready { background: #28a745; color: white; border: none; padding: 15px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; transition: 0.3s; }
+        .btn-ready:hover { background: #218838; transform: scale(1.05); }
+        
+        /* Estilo do Relatório */
+        #relatorio { background: #1e1e1e; padding: 20px; border-radius: 8px; margin-top: 50px; border-top: 5px solid #ffc107; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 15px; }
+        .stat-box { background: #2c2c2c; padding: 15px; border-radius: 8px; text-align: center; }
+        .stat-number { display: block; font-size: 30px; font-weight: bold; color: #ffc107; }
     </style>
 </head>
 <body>
     <h1>🍸 Pedidos Pendentes</h1>
-    <div id="lista-pedidos">Buscando...</div>
+    <div id="lista-pedidos">Buscando pedidos...</div>
+
+    <div id="relatorio">
+        <h2>📊 Relatório da Noite (S.A. Drinks)</h2>
+        <div class="stats-grid" id="stats-vendas">
+            <div class="stat-box">
+                <span class="stat-number" id="total-geral">0</span>
+                Total de Drinks
+            </div>
+            </div>
+    </div>
 
     <script>
         const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
@@ -24,17 +42,50 @@
 
         db.ref('pedidos').on('value', (snapshot) => {
             const lista = document.getElementById('lista-pedidos');
+            const statsContainer = document.getElementById('stats-vendas');
+            const totalGeralElement = document.getElementById('total-geral');
+            
             lista.innerHTML = "";
+            let totalGeral = 0;
+            let contagemDrinks = {};
+
             snapshot.forEach((item) => {
                 const p = item.val();
+                
+                // Lógica de Pedidos Pendentes
                 if(p.status === "pendente") {
                     lista.innerHTML += `
                         <div class="pedido-card">
-                            <div><span class="cliente-nome">${p.cliente}</span><br>Drink: ${p.drink}</div>
+                            <div><span class="cliente-nome">${p.cliente}</span><br>Drink: <b>${p.drink}</b></div>
                             <button class="btn-ready" onclick="finalizar('${item.key}')">PRONTO</button>
                         </div>`;
                 }
+
+                // Lógica do Relatório (Contar apenas os prontos)
+                if(p.status === "PRONTO") {
+                    totalGeral++;
+                    contagemDrinks[p.drink] = (contagemDrinks[p.drink] || 0) + 1;
+                }
             });
+
+            // Atualizar o visual do Relatório
+            totalGeralElement.innerText = totalGeral;
+            
+            // Limpar e reconstruir os boxes de drinks específicos
+            const boxesAntigos = document.querySelectorAll('.stat-drink');
+            boxesAntigos.forEach(box => box.remove());
+
+            for (const [nomeDrink, qtd] of Object.entries(contagemDrinks)) {
+                statsContainer.innerHTML += `
+                    <div class="stat-box stat-drink">
+                        <span class="stat-number" style="color:#28a745">${qtd}</span>
+                        ${nomeDrink}
+                    </div>`;
+            }
+
+            if (lista.innerHTML === "") {
+                lista.innerHTML = "<p style='color:#888'>Nenhum pedido pendente no momento.</p>";
+            }
         });
 
         function finalizar(id) {
