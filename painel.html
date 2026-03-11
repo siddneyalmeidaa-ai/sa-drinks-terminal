@@ -7,140 +7,145 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: white; padding: 15px; }
+        body { font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: white; padding: 15px; margin: 0; }
+        .container { max-width: 800px; margin: auto; }
         h1, h2 { color: #28a745; text-transform: uppercase; border-bottom: 2px solid #1a1a1a; padding-bottom: 10px; letter-spacing: 1px; }
         
-        #lista-pedidos { display: grid; gap: 10px; }
+        #lista-pedidos { display: grid; gap: 12px; }
         
         .pedido-card { 
             background: #161616; 
             border-left: 6px solid #28a745; 
-            padding: 15px; 
-            border-radius: 10px; 
+            padding: 18px; 
+            border-radius: 12px; 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            transition: 0.3s;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.6);
         }
 
-        .cliente-nome { color: #28a745; font-weight: bold; font-size: 20px; display: block; margin-bottom: 4px; }
-        .drink-info { font-size: 16px; color: #ddd; }
+        .cliente-nome { color: #28a745; font-weight: bold; font-size: 22px; display: block; }
+        .drink-info { font-size: 18px; color: #fff; margin: 5px 0; display: block; }
         
-        /* Estilo do Tempo */
-        .tempo-container { margin-top: 8px; font-size: 13px; color: #888; display: flex; gap: 15px; }
-        .cronometro { font-weight: bold; padding: 2px 6px; border-radius: 4px; background: #222; }
+        /* Receituário Injetado */
+        .receita-box { font-size: 12px; color: #ff9f43; background: #221a10; padding: 8px; border-radius: 6px; margin: 8px 0; border: 1px solid #3d2b14; line-height: 1.4; }
+
+        .tempo-container { margin-top: 10px; font-size: 13px; color: #888; display: flex; gap: 15px; align-items: center; }
+        .cronometro { font-weight: bold; padding: 3px 8px; border-radius: 5px; background: #222; border: 1px solid #333; }
 
         .btn-ready { 
-            background: #28a745; color: white; border: none; padding: 12px 20px; 
-            border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 15px; 
+            background: #28a745; color: white; border: none; padding: 15px 25px; 
+            border-radius: 10px; cursor: pointer; font-weight: bold; font-size: 16px; 
+            box-shadow: 0 4px 0 #1e7e34;
         }
+        .btn-ready:active { transform: translateY(3px); box-shadow: none; }
         
-        /* Relatório */
-        #relatorio { background: #111; padding: 20px; border-radius: 12px; margin-top: 40px; border: 1px solid #333; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 15px; }
-        .stat-box { background: #1c1c1c; padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #222; }
-        .stat-number { display: block; font-size: 28px; font-weight: bold; color: #ffc107; }
+        #relatorio { background: #111; padding: 25px; border-radius: 15px; margin-top: 50px; border: 1px solid #222; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
+        .stat-box { background: #1c1c1c; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #333; }
+        .stat-number { display: block; font-size: 32px; font-weight: bold; color: #ffc107; }
     </style>
 </head>
 <body>
+<div class="container">
     <h1>🍸 Pedidos Pendentes</h1>
-    <div id="lista-pedidos">Sincronizando com a nuvem...</div>
+    <div id="lista-pedidos">Sincronizando com a nuvem S.A...</div>
 
     <div id="relatorio">
-        <h2>📊 Relatório da Noite (S.A. DRINKS)</h2>
+        <h2>📊 Relatório da Noite</h2>
         <div class="stats-grid" id="stats-vendas">
             <div class="stat-box">
                 <span class="stat-number" id="total-geral">0</span>
-                Total Geral
+                Total de Drinks
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+<script>
+    const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
-        // Função para calcular o tempo corrido
-        function calcularTempo(timestamp) {
-            if(!timestamp) return "0m";
-            const agora = new Date().getTime();
-            const diff = Math.floor((agora - timestamp) / 60000); // Diferença em minutos
-            return diff;
-        }
+    // Dicionário de Ingredientes S.A. Drinks
+    const RECEITUARIO = {
+        "QUANTUM BLUE": "🔵 50ml Gin, 20ml Curaçau Blue, Soda, Limão Siciliano.",
+        "PINK S.A.": "💗 Morango, Alecrim, Tônica. (Base Gin se solicitado).",
+        "TROPICAL YELLOW": "🟡 Abacaxi, Gengibre, Água com Gás.",
+        "RED SUPREME": "🔴 Frutas Vermelhas, Gin, Soda.",
+        "GREEN VIBE": "🟢 Maçã Verde, Hortelã, Soda.",
+        "SUNSET PEACH": "🟠 [SEM ÁLCOOL] 40ml Xarope Pêssego, 100ml Suco Laranja, Tônica/Soda e Fio de Grenadine no fundo."
+    };
 
-        // Loop para atualizar os cronômetros na tela a cada 30 segundos
-        setInterval(() => {
-            document.querySelectorAll('.cronometro').forEach(span => {
-                const ts = span.getAttribute('data-ts');
-                const min = calcularTempo(parseInt(ts));
-                span.innerText = min + " min atrás";
-                
-                // Feedback visual de urgência
-                if(min >= 10) span.style.color = "#ffc107"; // Alerta: Amarelo
-                if(min >= 15) span.style.color = "#e63946"; // Crítico: Vermelho
-            });
-        }, 30000);
+    function calcularTempo(ts) {
+        if(!ts) return 0;
+        return Math.floor((new Date().getTime() - ts) / 60000);
+    }
 
-        db.ref('pedidos').on('value', (snapshot) => {
-            const lista = document.getElementById('lista-pedidos');
-            const statsContainer = document.getElementById('stats-vendas');
-            const totalGeralElement = document.getElementById('total-geral');
+    setInterval(() => {
+        document.querySelectorAll('.cronometro').forEach(span => {
+            const min = calcularTempo(parseInt(span.getAttribute('data-ts')));
+            span.innerText = min + " min atrás";
+            if(min >= 10) span.style.color = "#ffc107";
+            if(min >= 15) span.style.color = "#e63946";
+        });
+    }, 20000);
+
+    db.ref('pedidos').on('value', (snapshot) => {
+        const lista = document.getElementById('lista-pedidos');
+        const statsContainer = document.getElementById('stats-vendas');
+        const totalGeralElement = document.getElementById('total-geral');
+        
+        lista.innerHTML = "";
+        let totalGeral = 0;
+        let contagemDrinks = {};
+
+        snapshot.forEach((item) => {
+            const p = item.val();
+            const id = item.key;
             
-            lista.innerHTML = "";
-            let totalGeral = 0;
-            let contagemDrinks = {};
+            if(p.status === "pendente") {
+                const ts = p.timestamp || new Date().getTime();
+                const hora = new Date(ts).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+                const receita = RECEITUARIO[p.drink] || "Ingredientes não catalogados.";
 
-            snapshot.forEach((item) => {
-                const p = item.val();
-                const id = item.key;
-                
-                if(p.status === "pendente") {
-                    // Se o pedido não tiver timestamp, ele cria um agora para não bugar
-                    const ts = p.timestamp || new Date().getTime();
-                    const horaFormatada = new Date(ts).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
-
-                    lista.innerHTML += `
-                        <div class="pedido-card">
-                            <div>
-                                <span class="cliente-nome">${p.cliente}</span>
-                                <span class="drink-info">Drink: <b>${p.drink}</b></span>
-                                <div class="tempo-container">
-                                    <span>🕒 Solicitado às ${horaFormatada}</span>
-                                    <span class="cronometro" data-ts="${ts}">${calcularTempo(ts)} min atrás</span>
-                                </div>
+                lista.innerHTML += `
+                    <div class="pedido-card">
+                        <div style="flex: 1;">
+                            <span class="cliente-nome">${p.cliente}</span>
+                            <span class="drink-info">Drink: <b>${p.drink}</b></span>
+                            <div class="receita-box"><b>RECEITA:</b> ${receita}</div>
+                            <div class="tempo-container">
+                                <span>🕒 ${hora}</span>
+                                <span class="cronometro" data-ts="${ts}">${calcularTempo(ts)} min atrás</span>
                             </div>
-                            <button class="btn-ready" onclick="finalizar('${id}')">PRONTO</button>
-                        </div>`;
-                }
-
-                if(p.status === "PRONTO") {
-                    totalGeral++;
-                    contagemDrinks[p.drink] = (contagemDrinks[p.drink] || 0) + 1;
-                }
-            });
-
-            totalGeralElement.innerText = totalGeral;
-            
-            // Reconstrução do Relatório
-            const boxesAntigos = document.querySelectorAll('.stat-drink');
-            boxesAntigos.forEach(box => box.remove());
-
-            for (const [nomeDrink, qtd] of Object.entries(contagemDrinks)) {
-                statsContainer.innerHTML += `
-                    <div class="stat-box stat-drink">
-                        <span class="stat-number" style="color:#28a745">${qtd}</span>
-                        ${nomeDrink}
+                        </div>
+                        <button class="btn-ready" onclick="finalizar('${id}')">PRONTO</button>
                     </div>`;
             }
 
-            if (lista.innerHTML === "") lista.innerHTML = "<p style='color:#555; text-align:center;'>Aguardando novos pedidos...</p>";
+            if(p.status === "PRONTO") {
+                totalGeral++;
+                contagemDrinks[p.drink] = (contagemDrinks[p.drink] || 0) + 1;
+            }
         });
 
-        function finalizar(id) {
-            db.ref('pedidos/' + id).update({ status: "PRONTO" });
+        totalGeralElement.innerText = totalGeral;
+        document.querySelectorAll('.stat-drink').forEach(box => box.remove());
+
+        for (const [nome, qtd] of Object.entries(contagemDrinks)) {
+            statsContainer.innerHTML += `
+                <div class="stat-box stat-drink">
+                    <span class="stat-number" style="color:#28a745">${qtd}</span>
+                    ${nome}
+                </div>`;
         }
-    </script>
+        if (lista.innerHTML === "") lista.innerHTML = "<p style='color:#444; text-align:center; padding:20px;'>Nenhum pedido na fila. Bar limpo!</p>";
+    });
+
+    function finalizar(id) {
+        db.ref('pedidos/' + id).update({ status: "PRONTO" });
+    }
+</script>
 </body>
 </html>
