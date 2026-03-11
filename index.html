@@ -7,7 +7,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        :root { --primary: #28a745; --dark: #0a0a0a; --card: #ffffff; }
+        :root { --primary: #28a745; --dark: #0a0a0a; --card: #ffffff; --accent: #ff9f43; }
         body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
         #app { max-width: 450px; margin: auto; }
         .header { text-align: center; padding: 30px 0; border-bottom: 1px solid #222; margin-bottom: 20px; }
@@ -18,7 +18,7 @@
 
         .card { background: #111; border-radius: 18px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; transition: 0.3s; }
         .img-container { width: 100%; height: 220px; background-size: cover; background-position: center; position: relative; }
-        .tag-zero { position: absolute; top: 10px; right: 10px; background: #ff9f43; color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .tag-zero { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
         
         .info { padding: 20px; }
         .nome { font-size: 20px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px; letter-spacing: 1px; }
@@ -36,50 +36,60 @@
     <div id="app">
         <div class="header"><div class="logo">S.A. DRINKS</div></div>
         
-        <label style="font-size: 12px; color: #666; margin-left: 5px;">IDENTIFICAÇÃO:</label>
+        <label style="font-size: 11px; color: #666; margin-left: 5px; text-transform: uppercase; letter-spacing: 1px;">Identificação do Pedido:</label>
         <input type="text" id="nomeCliente" class="input-nome" placeholder="Seu nome para o brinde...">
 
         <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')"></div>
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')">
+                <div class="tag-zero">0% ÁLCOOL</div>
+            </div>
             <div class="info">
                 <span class="nome">QUANTUM BLUE</span>
-                <span class="ingredientes">Gin Premium, Curaçau Blue, Limão Siciliano e Tônica. O clássico tecnológico.</span>
+                <span class="ingredientes">Xarope Curaçau Blue (Zero Álcool), Limão Siciliano e Soda vibrante. Refrescância tecnológica.</span>
                 <button class="btn" onclick="pedir('QUANTUM BLUE')">Solicitar Drink</button>
             </div>
         </div>
 
         <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1544145945-f90425340c7e?w=500')"></div>
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1544145945-f90425340c7e?w=500')">
+                <div class="tag-zero">0% ÁLCOOL</div>
+            </div>
             <div class="info">
                 <span class="nome">PINK S.A.</span>
-                <span class="ingredientes">Morango, Alecrim e Tônica. Refrescante, aromático e levemente adocicado.</span>
+                <span class="ingredientes">Morangos frescos, ramo de Alecrim e Água Tônica Premium. Perfil aromático e leve.</span>
                 <button class="btn" onclick="pedir('PINK S.A.')">Solicitar Drink</button>
             </div>
         </div>
 
         <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1587223962930-cb7f31384c19?w=500')"></div>
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1587223962930-cb7f31384c19?w=500')">
+                <div class="tag-zero">0% ÁLCOOL</div>
+            </div>
             <div class="info">
                 <span class="nome">TROPICAL YELLOW</span>
-                <span class="ingredientes">Abacaxi, Gengibre e Água com Gás. Cítrico com toque picante.</span>
+                <span class="ingredientes">Abacaxi, Gengibre selecionado e Água com Gás. Cítrico com toque picante natural.</span>
                 <button class="btn" onclick="pedir('TROPICAL YELLOW')">Solicitar Drink</button>
             </div>
         </div>
 
         <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?w=500')"></div>
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?w=500')">
+                <div class="tag-zero">0% ÁLCOOL</div>
+            </div>
             <div class="info">
                 <span class="nome">RED SUPREME</span>
-                <span class="ingredientes">Frutas Vermelhas, Gin e Soda. Explosão de sabor e cor vibrante.</span>
+                <span class="ingredientes">Infusão de Frutas Vermelhas e Soda. Uma explosão de sabor e cor intensa.</span>
                 <button class="btn" onclick="pedir('RED SUPREME')">Solicitar Drink</button>
             </div>
         </div>
 
         <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1592663527359-cf6642f54cff?w=500')"></div>
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1592663527359-cf6642f54cff?w=500')">
+                <div class="tag-zero">0% ÁLCOOL</div>
+            </div>
             <div class="info">
                 <span class="nome">GREEN VIBE</span>
-                <span class="ingredientes">Maçã Verde, Hortelã e Soda. O equilíbrio perfeito entre o azedo e o doce.</span>
+                <span class="ingredientes">Xarope de Maçã Verde, Hortelã fresca e Soda. O equilíbrio perfeito entre o azedo e o doce.</span>
                 <button class="btn" onclick="pedir('GREEN VIBE')">Solicitar Drink</button>
             </div>
         </div>
@@ -90,15 +100,15 @@
             </div>
             <div class="info">
                 <span class="nome">SUNSET PEACH</span>
-                <span class="ingredientes">Pêssego, Suco de Laranja e Grenadine. Visual degradê, sabor tropical intenso.</span>
-                <button class="btn" style="background: #ff9f43; color: #000;" onclick="pedir('SUNSET PEACH')">Solicitar Drink</button>
+                <span class="ingredientes">Pêssego, Suco de Laranja e Grenadine. Visual degradê, sabor tropical sem álcool.</span>
+                <button class="btn" style="background: var(--accent); color: #000;" onclick="pedir('SUNSET PEACH')">Solicitar Drink</button>
             </div>
         </div>
     </div>
 
     <div id="status-area">
         <div id="msg-status" class="aviso">PEDIDO EM PREPARO!</div>
-        <p id="msg-detalhe" style="color: #888;">Nosso barman já recebeu sua solicitação. Aguarde um instante.</p>
+        <p id="msg-detalhe" style="color: #888;">Nossa equipe já recebeu sua solicitação. Aguarde o aviso de pronto.</p>
         <button class="btn" style="margin-top: 30px; background: #222;" onclick="location.reload()">Novo Pedido</button>
     </div>
 
@@ -118,23 +128,21 @@
                 cliente: nomeInput,
                 drink: drinkNome,
                 status: "pendente",
-                timestamp: Date.now() // ESSENCIAL PARA O CRONÔMETRO DO BARMAN
+                timestamp: Date.now() 
             }).then(() => {
                 document.getElementById('app').style.display = 'none';
                 document.getElementById('status-area').style.display = 'block';
                 
-                // Monitoramento em tempo real do status
                 database.ref('pedidos/' + idPedido).on('value', (snapshot) => {
                     const dados = snapshot.val();
                     if (dados && dados.status === "PRONTO") {
                         document.getElementById('msg-status').innerHTML = "🔥 ESTÁ PRONTO! 🔥";
                         document.getElementById('msg-status').style.color = "#ff4757";
                         document.getElementById('msg-detalhe').innerHTML = dados.cliente + ", venha retirar seu <b>" + dados.drink + "</b> no balcão!";
-                        // Feedback tátil se disponível
                         if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
                     }
                 });
-            }).catch(err => alert("Erro ao conectar: " + err));
+            }).catch(err => alert("Erro ao conectar ao servidor da S.A. DRINKS: " + err));
         }
     </script>
 </body>
