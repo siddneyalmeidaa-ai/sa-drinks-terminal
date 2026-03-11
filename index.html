@@ -3,91 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.A. DRINKS - SUPREMACIA</title>
+    <title>S.A. DRINKS - PREMIUM</title>
     <style>
-        body { 
-            background-color: #f8f9fa; 
-            color: #212529; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            margin: 0; 
-            padding: 10px; 
-            display: flex; 
-            justify-content: center;
-        }
-        #app-container { max-width: 500px; width: 100%; }
-
-        .header { 
-            text-align: center; 
-            padding: 25px 0; 
-            background: #fff; 
-            border-radius: 20px; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
-            margin-bottom: 20px;
-        }
-        .logo { font-size: 26px; font-weight: 800; letter-spacing: -1px; }
-        .sublogo { font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 2px; }
-
-        .input-nome { 
-            background: #fff; 
-            border: 1px solid #ddd; 
-            padding: 16px; 
-            width: 100%; 
-            margin-bottom: 20px; 
-            border-radius: 12px; 
-            font-size: 16px; 
-            box-sizing: border-box;
-        }
-
-        .drink-card { 
-            background: #fff; 
-            border-radius: 20px; 
-            margin-bottom: 25px; 
-            overflow: hidden; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-        
-        .img-box { 
-            width: 100%; 
-            height: 220px; 
-            background: #eee;
-        }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .info-box { padding: 20px; }
-        .nome { font-size: 20px; font-weight: 700; margin-bottom: 5px; display: block; }
-        .ingredientes { color: #777; font-size: 13px; line-height: 1.5; margin-bottom: 15px; display: block; }
-        
-        .btn-pedir { 
-            background: #000; 
-            color: #fff; 
-            border: none; 
-            padding: 15px; 
-            width: 100%; 
-            font-weight: 600; 
-            border-radius: 10px; 
-            font-size: 14px;
-            text-transform: uppercase;
-        }
-
-        #status-tela { 
-            display: none; 
-            text-align: center; 
-            margin-top: 100px; 
-            font-size: 22px; 
-            font-weight: 700;
-        }
+        body { background-color: #f0f2f5; color: #1c1e21; font-family: sans-serif; margin: 0; padding: 10px; display: flex; justify-content: center; }
+        #app { max-width: 450px; width: 100%; }
+        .header { background: #fff; padding: 20px; text-align: center; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .logo { font-size: 24px; font-weight: bold; color: #000; }
+        .input-nome { width: 100%; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
+        .card { background: #fff; border-radius: 15px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .img-container { width: 100%; height: 200px; background-size: cover; background-position: center; }
+        .info { padding: 15px; }
+        .nome { font-size: 18px; font-weight: bold; margin-bottom: 5px; display: block; }
+        .ingredientes { font-size: 13px; color: #65676b; line-height: 1.4; margin-bottom: 15px; display: block; }
+        .btn { background: #000; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+        #status { display: none; text-align: center; margin-top: 50px; font-size: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
-
-    <div id="app-container">
-        <div class="header">
-            <div class="logo">S.A. DRINKS</div>
-            <div class="sublogo">Experience Mobile</div>
-        </div>
-        
+    <div id="app">
+        <div class="header"><div class="logo">S.A. DRINKS</div><div style="font-size: 10px; color: #999;">MOBILE EXPERIENCE</div></div>
         <input type="text" id="nomeCliente" class="input-nome" placeholder="Seu nome para o pedido...">
 
-        <div class="drink-card">
-            <div class="img-box"><img src="
-                                     
+        <div class="card">
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')"></div>
+            <div class="info">
+                <span class="nome">QUANTUM BLUE</span>
+                <span class="ingredientes">Curaçau Blue, Limão Taiti e Soda. Refrescante e visual azul vibrante.</span>
+                <button class="btn" onclick="pedir('QUANTUM BLUE')">Pedir Drink</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1544145945-f90425340c7e?w=500')"></div>
+            <div class="info">
+                <span class="nome">PINK S.A.</span>
+                <span class="ingredientes">Morango, Alecrim e Tônica. O equilíbrio perfeito entre o doce e o erval.</span>
+                <button class="btn" onclick="pedir('PINK S.A.')">Pedir Drink</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1587223962930-cb7f31384c19?w=500')"></div>
+            <div class="info">
+                <span class="nome">TROPICAL YELLOW</span>
+                <span class="ingredientes">Gengibre, Limão Siciliano e Água com Gás. Cítrico e energizante.</span>
+                <button class="btn" onclick="pedir('TROPICAL YELLOW')">Pedir Drink</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?w=500')"></div>
+            <div class="info">
+                <span class="nome">GREEN DETOX</span>
+                <span class="ingredientes">Maçã Verde, Hortelã e Água com Gás. Leve e ultra refrescante.</span>
+                <button class="btn" onclick="pedir('GREEN DETOX')">Pedir Drink</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1592663527359-cf6642f54cff?w=500')"></div>
+            <div class="info">
+                <span class="nome">COFFEE TONIC</span>
+                <span class="ingredientes">Café Concentrado e Tônica Premium
+                    
