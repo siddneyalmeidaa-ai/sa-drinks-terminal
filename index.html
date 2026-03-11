@@ -18,28 +18,65 @@
         .nome { font-size: 18px; font-weight: bold; margin-bottom: 5px; display: block; }
         .ingredientes { font-size: 13px; color: #65676b; line-height: 1.4; margin-bottom: 15px; display: block; }
         .btn { background: #000; color: #fff; border: none; padding: 12px; width: 100%; border-radius: 8px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
-        #status-area { display: none; text-align: center; margin-top: 50px; }
-        .aviso { font-size: 22px; font-weight: bold; color: #28a745; }
+        #status-area { display: none; text-align: center; margin-top: 50px; padding: 20px; background: white; border-radius: 15px; }
+        .aviso { font-size: 22px; font-weight: bold; color: #28a745; margin-bottom: 10px; }
     </style>
 </head>
 <body>
     <div id="app">
         <div class="header"><div class="logo">S.A. DRINKS</div></div>
         <input type="text" id="nomeCliente" class="input-nome" placeholder="Seu nome para o pedido...">
-        
+
         <div class="card">
             <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')"></div>
             <div class="info">
                 <span class="nome">QUANTUM BLUE</span>
-                <span class="ingredientes">Curaçau Blue, Limão Taiti e Soda.</span>
+                <span class="ingredientes">Curaçau Blue, Limão Taiti e Soda. Visual azul vibrante.</span>
                 <button class="btn" onclick="pedir('QUANTUM BLUE')">Pedir Drink</button>
             </div>
         </div>
+
+        <div class="card">
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1544145945-f90425340c7e?w=500')"></div>
+            <div class="info">
+                <span class="nome">PINK S.A.</span>
+                <span class="ingredientes">Morango, Alecrim e Tônica. Doce e erval.</span>
+                <button class="btn" onclick="pedir('PINK S.A.')">Pedir Drink</button>
+            </div>
         </div>
+
+        <div class="card">
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1587223962930-cb7f31384c19?w=500')"></div>
+            <div class="info">
+                <span class="nome">TROPICAL YELLOW</span>
+                <span class="ingredientes">Gengibre, Limão Siciliano e Água com Gás. Cítrico.</span>
+                <button class="btn" onclick="pedir('TROPICAL YELLOW')">Pedir Drink</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?w=500')"></div>
+            <div class="info">
+                <span class="nome">GREEN DETOX</span>
+                <span class="ingredientes">Maçã Verde, Hortelã e Água com Gás. Leve.</span>
+                <button class="btn" onclick="pedir('GREEN DETOX')">Pedir Drink</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1592663527359-cf6642f54cff?w=500')"></div>
+            <div class="info">
+                <span class="nome">COFFEE TONIC</span>
+                <span class="ingredientes">Café Concentrado e Tônica Premium. Diferenciado.</span>
+                <button class="btn" onclick="pedir('COFFEE TONIC')">Pedir Drink</button>
+            </div>
+        </div>
+    </div>
 
     <div id="status-area">
         <div id="msg-status" class="aviso">PEDIDO ENVIADO!</div>
         <p id="msg-detalhe">Aguarde o barman chamar seu nome.</p>
+        <button class="btn" onclick="location.reload()">Novo Pedido</button>
     </div>
 
     <script>
@@ -49,7 +86,7 @@
 
         function pedir(drinkNome) {
             const nome = document.getElementById('nomeCliente').value;
-            if (!nome) { alert("Digite seu nome!"); return; }
+            if (!nome) { alert("Por favor, digite seu nome!"); return; }
 
             const novoPedido = database.ref('pedidos').push();
             const idPedido = novoPedido.key;
@@ -57,18 +94,19 @@
             novoPedido.set({
                 cliente: nome,
                 drink: drinkNome,
-                status: "pendente"
+                status: "pendente",
+                timestamp: Date.now()
             }).then(() => {
                 document.getElementById('app').style.display = 'none';
                 document.getElementById('status-area').style.display = 'block';
                 
-                // ESCUTA O STATUS DESSE PEDIDO ESPECÍFICO
+                // ESCUTA SE VOCÊ CLICOU EM "PRONTO" NO PAINEL
                 database.ref('pedidos/' + idPedido).on('value', (snapshot) => {
                     const dados = snapshot.val();
                     if (dados && dados.status === "PRONTO") {
-                        document.getElementById('msg-status').innerHTML = "🔥 DRINK PRONTO! 🔥";
-                        document.getElementById('msg-detalhe').innerHTML = "Pode vir buscar no balcão, " + dados.cliente + "!";
+                        document.getElementById('msg-status').innerHTML = "🔥 SEU DRINK ESTÁ PRONTO! 🔥";
                         document.getElementById('msg-status').style.color = "#ff4757";
+                        document.getElementById('msg-detalhe').innerHTML = "Pode vir buscar agora, " + dados.cliente + "!";
                     }
                 });
             });
