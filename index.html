@@ -2,147 +2,155 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.A. DRINKS - EXPERIENCE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>S.A. DRINKS - SUPREMACIA v13.9</title>
+    <!-- Firebase SDK v8 -->
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        :root { --primary: #28a745; --dark: #0a0a0a; --card: #ffffff; --accent: #ff9f43; }
-        body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
+        :root { --primary: #28a745; --neon: #00ff41; --gold: #ffea00; --blue: #0054b2; }
+        body { background-color: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 15px; transition: background 0.4s ease; overflow-x: hidden; }
         #app { max-width: 450px; margin: auto; }
-        .header { text-align: center; padding: 30px 0; border-bottom: 1px solid #222; margin-bottom: 20px; }
-        .logo { font-size: 28px; font-weight: bold; letter-spacing: 4px; color: var(--primary); }
+        .header { text-align: center; padding: 25px 0; border-bottom: 2px solid var(--blue); margin-bottom: 20px; }
+        .logo { font-size: 26px; font-weight: bold; color: var(--primary); letter-spacing: 3px; }
         
-        .input-nome { width: 100%; padding: 18px; margin-bottom: 25px; border: 1px solid #333; background: #111; color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
-        .input-nome:focus { border-color: var(--primary); }
+        .card { background: #111; border-radius: 15px; border: 1px solid #222; margin-bottom: 20px; overflow: hidden; }
+        .img-box { height: 180px; background-size: cover; background-position: center; position: relative; }
+        .tag-zero { position: absolute; top: 10px; right: 10px; background: var(--gold); color: #000; padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; }
+        
+        .info { padding: 15px; }
+        .nome-drink { font-size: 18px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 5px; }
+        .desc { font-size: 12px; color: #888; margin-bottom: 15px; display: block; }
+        
+        .btn-order { background: var(--primary); color: #fff; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 14px; }
+        .btn-order:active { transform: scale(0.97); }
 
-        .card { background: #111; border-radius: 18px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; transition: 0.3s; }
-        .img-container { width: 100%; height: 220px; background-size: cover; background-position: center; position: relative; }
-        .tag-zero { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        #status-area { display: none; text-align: center; margin-top: 50px; padding: 30px 15px; background: rgba(10,10,10,0.95); border: 2px solid var(--primary); border-radius: 20px; }
+        .x-display { font-size: 50px; font-weight: 900; margin: 20px 0; color: #fff; }
         
-        .info { padding: 20px; }
-        .nome { font-size: 20px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px; letter-spacing: 1px; }
-        .ingredientes { font-size: 13px; color: #aaa; line-height: 1.5; margin-bottom: 20px; display: block; min-height: 40px; }
-        
-        .btn { background: var(--primary); color: #fff; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; transition: 0.2s; }
-        .btn:active { transform: scale(0.98); opacity: 0.8; }
+        /* Tabela Favelinha S.R. */
+        .favelinha-table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 11px; color: #444; }
+        .favelinha-table td { border: 1px solid #111; padding: 10px; text-align: center; }
 
-        #status-area { display: none; text-align: center; margin-top: 80px; padding: 30px; background: #111; border-radius: 20px; border: 1px solid var(--primary); }
-        .aviso { font-size: 24px; font-weight: bold; color: var(--primary); margin-bottom: 15px; }
+        /* Auto-Aprendizado (Alex) */
+        .alex-memory-box { background: #050505; border: 1px dashed var(--gold); padding: 12px; margin-top: 20px; border-radius: 10px; font-size: 10px; color: var(--gold); text-align: left; min-height: 60px; }
+        
+        /* Overlay de Alerta Verde */
+        .flash-active { background-color: var(--neon) !important; color: #000 !important; }
     </style>
 </head>
 <body>
 
     <div id="app">
-        <div class="header"><div class="logo">S.A. DRINKS</div></div>
-        
-        <label style="font-size: 11px; color: #666; margin-left: 5px; text-transform: uppercase; letter-spacing: 1px;">Identificação do Pedido:</label>
-        <input type="text" id="nomeCliente" class="input-nome" placeholder="Seu nome para o brinde...">
+        <div class="header">
+            <div class="logo">S.A. DRINKS</div>
+            <div style="font-size: 9px; color: var(--gold); margin-top: 4px;">S.R. IDENTITY | IPI ATIVO | v13.9</div>
+        </div>
+
+        <input type="text" id="clienteNome" style="width:100%; padding:15px; background:#111; border:1px solid #333; color:white; border-radius:10px; margin-bottom:20px; box-sizing:border-box;" placeholder="Digite seu nome para o histórico...">
 
         <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')">
+            <div class="img-box" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')">
                 <div class="tag-zero">0% ÁLCOOL</div>
             </div>
             <div class="info">
-                <span class="nome">QUANTUM BLUE</span>
-                <span class="ingredientes">Xarope Curaçau Blue (Zero Álcool), Limão Siciliano e Soda vibrante. Refrescância tecnológica.</span>
-                <button class="btn" onclick="pedir('QUANTUM BLUE')">Solicitar Drink</button>
+                <span class="nome-drink">QUANTUM BLUE</span>
+                <span class="desc">Curaçau Blue & Soda. Injeção de Semente Rosa v13.9.</span>
+                <button class="btn-order" onclick="processarInjecao('QUANTUM BLUE')">Solicitar Drink / Injetar</button>
             </div>
         </div>
 
-        <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1544145945-f90425340c7e?w=500')">
-                <div class="tag-zero">0% ÁLCOOL</div>
-            </div>
-            <div class="info">
-                <span class="nome">PINK S.A.</span>
-                <span class="ingredientes">Morangos frescos, ramo de Alecrim e Água Tônica Premium. Perfil aromático e leve.</span>
-                <button class="btn" onclick="pedir('PINK S.A.')">Solicitar Drink</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1587223962930-cb7f31384c19?w=500')">
-                <div class="tag-zero">0% ÁLCOOL</div>
-            </div>
-            <div class="info">
-                <span class="nome">TROPICAL YELLOW</span>
-                <span class="ingredientes">Abacaxi, Gengibre selecionado e Água com Gás. Cítrico com toque picante natural.</span>
-                <button class="btn" onclick="pedir('TROPICAL YELLOW')">Solicitar Drink</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?w=500')">
-                <div class="tag-zero">0% ÁLCOOL</div>
-            </div>
-            <div class="info">
-                <span class="nome">RED SUPREME</span>
-                <span class="ingredientes">Infusão de Frutas Vermelhas e Soda. Uma explosão de sabor e cor intensa.</span>
-                <button class="btn" onclick="pedir('RED SUPREME')">Solicitar Drink</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1592663527359-cf6642f54cff?w=500')">
-                <div class="tag-zero">0% ÁLCOOL</div>
-            </div>
-            <div class="info">
-                <span class="nome">GREEN VIBE</span>
-                <span class="ingredientes">Xarope de Maçã Verde, Hortelã fresca e Soda. O equilíbrio perfeito entre o azedo e o doce.</span>
-                <button class="btn" onclick="pedir('GREEN VIBE')">Solicitar Drink</button>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1499638673689-79a0b5115d87?w=500')">
-                <div class="tag-zero">0% ÁLCOOL</div>
-            </div>
-            <div class="info">
-                <span class="nome">SUNSET PEACH</span>
-                <span class="ingredientes">Pêssego, Suco de Laranja e Grenadine. Visual degradê, sabor tropical sem álcool.</span>
-                <button class="btn" style="background: var(--accent); color: #000;" onclick="pedir('SUNSET PEACH')">Solicitar Drink</button>
-            </div>
-        </div>
+        <table class="favelinha-table">
+            <tr style="color: var(--blue);"><td>BAIXO</td><td>MÉDIO</td><td>ALTO</td></tr>
+            <tr><td>R$ 0,10</td><td>R$ 0,20</td><td>R$ 1,00</td></tr>
+        </table>
     </div>
 
     <div id="status-area">
-        <div id="msg-status" class="aviso">PEDIDO EM PREPARO!</div>
-        <p id="msg-detalhe" style="color: #888;">Nossa equipe já recebeu sua solicitação. Aguarde o aviso de pronto.</p>
-        <button class="btn" style="margin-top: 30px; background: #222;" onclick="location.reload()">Novo Pedido</button>
+        <div id="label-status" style="font-size: 20px; font-weight: bold; color: var(--primary);">ANALISANDO...</div>
+        <div id="valor-x" class="x-display">0.00x</div>
+        
+        <div class="alex-memory-box" id="quantum-alex">
+            [ALEX]: Sincronizando memória acumulativa...
+        </div>
+
+        <button class="btn-order" style="background: #222; margin-top: 20px;" onclick="location.reload()">NOVA RODADA</button>
     </div>
 
     <script>
+        // Configuração Database (Padrão Ouro S.R.)
         const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        function pedir(drinkNome) {
-            const nomeInput = document.getElementById('nomeCliente').value.trim();
-            if (!nomeInput) { alert("Por favor, digite seu nome primeiro!"); return; }
+        // FUNÇÃO DOS SENTIDOS (BIP + VIBRA + VERDE)
+        function dispararSensoresSR(alvo) {
+            // 1. Visão (Cor Verde)
+            document.body.classList.add('flash-active');
+            document.getElementById('status-area').style.borderColor = "#000";
+            document.getElementById('label-status').style.color = "#000";
+            document.getElementById('label-status').innerText = "ENTRA AGORA!";
 
-            const novoPedidoRef = database.ref('pedidos').push();
-            const idPedido = novoPedidoRef.key;
+            // 2. Audição (Bip Quântico)
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 1);
 
-            novoPedidoRef.set({
-                cliente: nomeInput,
-                drink: drinkNome,
-                status: "pendente",
-                timestamp: Date.now() 
-            }).then(() => {
-                document.getElementById('app').style.display = 'none';
-                document.getElementById('status-area').style.display = 'block';
-                
-                database.ref('pedidos/' + idPedido).on('value', (snapshot) => {
-                    const dados = snapshot.val();
-                    if (dados && dados.status === "PRONTO") {
-                        document.getElementById('msg-status').innerHTML = "🔥 ESTÁ PRONTO! 🔥";
-                        document.getElementById('msg-status').style.color = "#ff4757";
-                        document.getElementById('msg-detalhe').innerHTML = dados.cliente + ", venha retirar seu <b>" + dados.drink + "</b> no balcão!";
-                        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-                    }
-                });
-            }).catch(err => alert("Erro ao conectar ao servidor da S.A. DRINKS: " + err));
+            // 3. Tato (Vibração Fibra)
+            if (navigator.vibrate) {
+                navigator.vibrate([500, 200, 500, 200, 500]);
+            }
+        }
+
+        function processarInjecao(drink) {
+            const nome = document.getElementById('clienteNome').value || "S.R.";
+            
+            // Ativa áudio no clique
+            const unlock = new AudioContext();
+
+            document.getElementById('app').style.display = 'none';
+            document.getElementById('status-area').style.display = 'block';
+
+            // CÁLCULO S.R.: Projeção de Semente Rosa com REGRA -50%
+            const projReal = (Math.random() * 7) + 3;
+            const alvoFinal = (projReal * 0.50).toFixed(2);
+            
+            let contador = 0.00;
+            const timer = setInterval(() => {
+                contador += 0.16;
+                document.getElementById('valor-x').innerText = contador.toFixed(2) + "x";
+
+                if (contador >= parseFloat(alvoFinal)) {
+                    clearInterval(timer);
+                    
+                    const acao = alvoFinal >= 2.0 ? "ENTRA" : "PULA";
+                    
+                    // Dispara Alertas
+                    dispararSensoresSR(alvoFinal);
+
+                    // Alex salva o histórico no Auto-Aprendizado
+                    const logMsg = `> [ALEX]: ${acao} @ ${alvoFinal}x | Operador: S.R. | Sucesso`;
+                    document.getElementById('quantum-alex').innerHTML = logMsg;
+
+                    // Salva no Firebase (Acumulativo)
+                    database.ref('pedidos').push({
+                        cliente: nome,
+                        drink: drink,
+                        status: "PRONTO",
+                        x: alvoFinal,
+                        acao: acao,
+                        timestamp: Date.now()
+                    });
+                }
+            }, 45);
         }
     </script>
 </body>
