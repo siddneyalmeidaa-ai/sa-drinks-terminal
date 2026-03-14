@@ -14,7 +14,7 @@
         .logo { font-size: 28px; font-weight: bold; letter-spacing: 4px; color: var(--primary); }
         .input-nome { width: 100%; padding: 18px; margin-bottom: 25px; border: 1px solid #333; background: #111; color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
         .card { background: #111; border-radius: 18px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; }
-        .img-container { width: 100%; height: 220px; background-size: cover; background-position: center; background-color: #1a1a1a; position: relative; }
+        .img-container { width: 100%; height: 220px; background-size: cover; background-position: center; background-color: #1a1a1a; /* Backup preto */ position: relative; }
         .tag-zero { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
         .info { padding: 20px; }
         .nome { font-size: 20px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px; }
@@ -101,7 +101,7 @@
 
     <div id="status-area">
         <div id="msg-status" style="font-size: 24px; font-weight: bold; color: var(--primary); margin-bottom: 15px;">PREPARANDO...</div>
-        <p id="msg-detalhe" style="color: #888;">Aguarde o sinal sonoro para retirar.</p>
+        <p id="msg-detalhe" style="color: #888;">Aguarde o sinal para retirar seu drink.</p>
         <button class="btn" style="margin-top: 30px; background: #222;" onclick="location.reload()">Novo Pedido</button>
     </div>
 
@@ -147,5 +147,4 @@
         }
     </script>
 </body>
-    </html>
-    
+</html>
