@@ -13,15 +13,33 @@
         .header { text-align: center; padding: 25px 0; border-bottom: 1px solid #222; margin-bottom: 20px; }
         .logo { font-size: 28px; font-weight: bold; letter-spacing: 4px; color: var(--primary); }
         .input-nome { width: 100%; padding: 18px; margin-bottom: 25px; border: 1px solid #333; background: #111; color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
-        .card { background: #111; border-radius: 18px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; }
-        .img-container { width: 100%; height: 220px; background-size: cover; background-position: center; background-repeat: no-repeat; background-color: #1a1a1a; position: relative; }
+        
+        .card { background: #111; border-radius: 18px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; display: block !important; }
+        
+        /* Imagens com degradê de fundo caso o link falhe */
+        .img-container { 
+            width: 100%; 
+            height: 220px; 
+            background-size: cover; 
+            background-position: center; 
+            position: relative;
+            background-repeat: no-repeat;
+        }
+        
+        /* Fallbacks específicos por drink para nunca ficar preto */
+        .bg-blue { background: linear-gradient(45deg, #001f3f, #0074D9); }
+        .bg-pink { background: linear-gradient(45deg, #85144b, #FF4136); }
+        .bg-yellow { background: linear-gradient(45deg, #FF851B, #FFDC00); }
+        .bg-coffee { background: linear-gradient(45deg, #3d2b1f, #6f4e37); }
+        .bg-green { background: linear-gradient(45deg, #1d352b, #2ecc40); }
+        .bg-peach { background: linear-gradient(45deg, #FF851B, #ff4136); }
+
         .tag-zero { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
         .info { padding: 20px; }
         .nome { font-size: 20px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px; }
         .ingredientes { font-size: 13px; color: #aaa; line-height: 1.5; margin-bottom: 20px; display: block; min-height: 40px; }
         .btn { background: var(--primary); color: #fff; border: none; padding: 18px; width: 100%; border-radius: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; font-size: 14px; }
         #status-area { display: none; text-align: center; margin-top: 80px; padding: 30px; background: #111; border-radius: 20px; border: 1px solid var(--primary); }
-        .flash-pronto { background-color: var(--neon) !important; color: #000 !important; }
     </style>
 </head>
 <body>
@@ -32,29 +50,7 @@
 
         <div id="cardapio">
             <div class="card">
-                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1595981267035-23a022d64d1f?auto=format&fit=crop&w=500&q=80')">
-                    <div class="tag-zero">0% ÁLCOOL</div>
-                </div>
-                <div class="info">
-                    <span class="nome">PINK S.A.</span>
-                    <span class="ingredientes">Morangos frescos, Alecrim e Água Tônica Premium.</span>
-                    <button class="btn" onclick="pedir('PINK S.A.')">SOLICITAR DRINK</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1536935338213-d2c12334810a?auto=format&fit=crop&w=500&q=80')">
-                    <div class="tag-zero">0% ÁLCOOL</div>
-                </div>
-                <div class="info">
-                    <span class="nome">SUNSET PEACH</span>
-                    <span class="ingredientes">Pêssego, Suco de Laranja e Xarope de Groselha.</span>
-                    <button class="btn" onclick="pedir('SUNSET PEACH')">SOLICITAR DRINK</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=500&q=80')">
+                <div class="img-container bg-blue" style="background-image: url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500')">
                     <div class="tag-zero">0% ÁLCOOL</div>
                 </div>
                 <div class="info">
@@ -65,7 +61,29 @@
             </div>
 
             <div class="card">
-                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=500&q=80')">
+                <div class="img-container bg-pink" style="background-image: url('https://images.unsplash.com/photo-1595981267035-23a022d64d1f?w=500')">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                </div>
+                <div class="info">
+                    <span class="nome">PINK S.A.</span>
+                    <span class="ingredientes">Morangos frescos, Alecrim e Água Tônica Premium.</span>
+                    <button class="btn" onclick="pedir('PINK S.A.')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container bg-yellow" style="background-image: url('https://images.unsplash.com/photo-1546171753-97d7676e4602?w=500')">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                </div>
+                <div class="info">
+                    <span class="nome">TROPICAL YELLOW</span>
+                    <span class="ingredientes">Abacaxi, Gengibre selecionado e Água com Gás.</span>
+                    <button class="btn" onclick="pedir('TROPICAL YELLOW')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container bg-coffee" style="background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500')">
                     <div class="tag-zero">0% ÁLCOOL</div>
                 </div>
                 <div class="info">
@@ -74,36 +92,17 @@
                     <button class="btn" onclick="pedir('COFFEE TONIC')">SOLICITAR DRINK</button>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <div id="status-area">
-        <div id="msg-status" style="font-size: 24px; font-weight: bold; color: var(--primary); margin-bottom: 15px;">PREPARANDO...</div>
-        <p id="msg-detalhe" style="color: #888;">Aguarde o sinal para retirar seu drink.</p>
-        <button class="btn" style="margin-top: 30px; background: #222;" onclick="location.reload()">Novo Pedido</button>
-    </div>
+            <div class="card">
+                <div class="img-container bg-green" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                </div>
+                <div class="info">
+                    <span class="nome">GREEN VIBE</span>
+                    <span class="ingredientes">Xarope de Maçã Verde, Hortelã fresca e Soda.</span>
+                    <button class="btn" onclick="pedir('GREEN VIBE')">SOLICITAR DRINK</button>
+                </div>
+            </div>
 
-    <script>
-        const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
 
-        function pedir(drinkNome) {
-            const nomeInput = document.getElementById('nomeCliente').value.trim();
-            if (!nomeInput) { alert("Digite seu nome!"); return; }
-            const ref = database.ref('pedidos').push();
-            ref.set({ cliente: nomeInput, drink: drinkNome, status: "pendente", timestamp: Date.now() }).then(() => {
-                document.getElementById('app').style.display = 'none';
-                document.getElementById('status-area').style.display = 'block';
-                ref.on('value', (snap) => {
-                    const dados = snap.val();
-                    if (dados && dados.status === "PRONTO") {
-                        document.getElementById('msg-status').innerText = "🔥 LIBERADO! 🔥";
-                        document.getElementById('msg-status').style.color = "#00ff41";
-                    }
-                });
-            });
-        }
-    </script>
-</body>
-</html>
+            
