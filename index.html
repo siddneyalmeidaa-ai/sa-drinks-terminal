@@ -7,33 +7,22 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        :root { --primary: #28a745; --dark: #0a0a0a; --neon: #00ff41; --accent: #ff9f43; --blue: #0054b2; }
+        :root { --primary: #28a745; --neon: #00ff41; --accent: #ff9f43; --blue: #0054b2; }
         body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; transition: background 0.3s ease; }
         #app { max-width: 450px; margin: auto; }
-        .header { text-align: center; padding: 30px 0; border-bottom: 2px solid var(--blue); margin-bottom: 20px; }
+        .header { text-align: center; padding: 25px 0; border-bottom: 2px solid var(--blue); margin-bottom: 20px; }
         .logo { font-size: 28px; font-weight: bold; letter-spacing: 4px; color: var(--primary); }
-        
         .input-nome { width: 100%; padding: 18px; margin-bottom: 25px; border: 1px solid #333; background: #111; color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
-        .input-nome:focus { border-color: var(--primary); }
-
         .card { background: #111; border-radius: 18px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; }
         .img-container { width: 100%; height: 200px; background-size: cover; background-position: center; position: relative; }
         .tag-zero { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
-        
         .info { padding: 20px; }
         .nome { font-size: 20px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px; }
         .ingredientes { font-size: 13px; color: #aaa; margin-bottom: 20px; display: block; min-height: 40px; }
-        
         .btn { background: var(--primary); color: #fff; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
-        .btn:active { transform: scale(0.98); }
-
         #status-area { display: none; text-align: center; margin-top: 80px; padding: 30px; background: #111; border-radius: 20px; border: 2px solid var(--primary); }
         .aviso { font-size: 26px; font-weight: 900; color: var(--primary); margin-bottom: 15px; }
-        
-        /* Efeito de Flash para o Modo Supremacia */
         .flash-pronto { background-color: var(--neon) !important; color: #000 !important; }
-        
-        /* Tabela Favelinha Acumulativa */
         .favelinha { width: 100%; margin-top: 15px; border-collapse: collapse; font-size: 12px; color: #666; }
         .favelinha td { border: 1px solid #222; padding: 8px; text-align: center; }
     </style>
@@ -48,16 +37,7 @@
         
         <input type="text" id="nomeCliente" class="input-nome" placeholder="Seu nome para o brinde...">
 
-        <div class="card">
-            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')">
-                <div class="tag-zero">0% ÁLCOOL</div>
-            </div>
-            <div class="info">
-                <span class="nome">QUANTUM BLUE</span>
-                <span class="ingredientes">Curaçau Blue, Limão e Soda. Injeção de Semente Rosa v14.0.</span>
-                <button class="btn" onclick="pedir('QUANTUM BLUE')">Solicitar Drink</button>
-            </div>
-        </div>
+        <div id="lista-drinks"></div>
 
         <table class="favelinha">
             <tr style="color: var(--blue);"><td>STAKE BAIXA</td><td>STAKE MÉDIA</td><td>STAKE ALTA</td></tr>
@@ -69,8 +49,9 @@
         <div id="msg-status" class="aviso">PREPARANDO...</div>
         <p id="msg-detalhe" style="color: #888;">Aguardando sinal do servidor S.R.</p>
         <div id="alex-log" style="font-size: 10px; color: var(--accent); margin-top: 20px; border-top: 1px dashed #444; padding-top: 10px;">
-            [ALEX]: Memória Quântica em Standby...
+            [ALEX]: Memória Quântica ativa.
         </div>
+        <button class="btn" style="margin-top: 30px; background: #222;" onclick="location.reload()">NOVO PEDIDO</button>
     </div>
 
     <script>
@@ -78,62 +59,6 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        function dispararAlertaSonoroSupremacia() {
-            // SINAL SONORO FORTE (Ondas Quadradas para maior impacto)
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            
-            osc.type = 'square';
-            osc.frequency.setValueAtTime(880, audioCtx.currentTime); // Nota Lá (A5)
-            gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
-            
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            
-            osc.start();
-            osc.stop(audioCtx.currentTime + 1.5);
-
-            // VIBRAÇÃO (SENTIDO TATO)
-            if (navigator.vibrate) navigator.vibrate([500, 110, 500, 110, 500]);
-            
-            // FLASH VISUAL (SENTIDO VISÃO)
-            document.body.classList.add('flash-pronto');
-        }
-
-        function pedir(drinkNome) {
-            const nomeInput = document.getElementById('nomeCliente').value.trim();
-            if (!nomeInput) { alert("Identifique-se para o protocolo!"); return; }
-
-            const novoPedidoRef = database.ref('pedidos').push();
-            const idPedido = novoPedidoRef.key;
-
-            novoPedidoRef.set({
-                cliente: nomeInput,
-                drink: drinkNome,
-                status: "PENDENTE",
-                timestamp: Date.now() 
-            }).then(() => {
-                document.getElementById('app').style.display = 'none';
-                document.getElementById('status-area').style.display = 'block';
+        const drinks = [
+            { n: "QUANTUM BLUE", d: "Curaçau Blue, Limão e Soda.", i: "https://
                 
-                // MONITORAMENTO DO SENSOR
-                database.ref('pedidos/' + idPedido).on('value', (snapshot) => {
-                    const dados = snapshot.val();
-                    if (dados && dados.status === "PRONTO") {
-                        document.getElementById('msg-status').innerText = "🔥 DRINK LIBERADO! 🔥";
-                        document.getElementById('msg-detalhe').innerHTML = "<b>" + dados.cliente + "</b>, seu <b>" + dados.drink + "</b> está pronto!";
-                        
-                        // DISPARO DO SENSOR DE SUPREMACIA
-                        dispararAlertaSonoroSupremacia();
-
-                        // ALEX: AUTO-APRENDIZADO
-                        document.getElementById('alex-log').innerText = `[ALEX]: Pedido ${idPedido} finalizado com sucesso. Dados salvos.`;
-                    }
-                });
-            });
-        }
-    </script>
-</body>
-</html>
