@@ -3,40 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>S.A. DRINKS - SUPREMACIA v13.9</title>
-    <!-- Firebase SDK v8 -->
+    <title>S.A. DRINKS - SUPREMACIA v14.0</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        :root { --primary: #28a745; --neon: #00ff41; --gold: #ffea00; --blue: #0054b2; }
-        body { background-color: #000; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 15px; transition: background 0.4s ease; overflow-x: hidden; }
+        :root { --primary: #28a745; --dark: #0a0a0a; --neon: #00ff41; --accent: #ff9f43; --blue: #0054b2; }
+        body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; transition: background 0.3s ease; }
         #app { max-width: 450px; margin: auto; }
-        .header { text-align: center; padding: 25px 0; border-bottom: 2px solid var(--blue); margin-bottom: 20px; }
-        .logo { font-size: 26px; font-weight: bold; color: var(--primary); letter-spacing: 3px; }
+        .header { text-align: center; padding: 30px 0; border-bottom: 2px solid var(--blue); margin-bottom: 20px; }
+        .logo { font-size: 28px; font-weight: bold; letter-spacing: 4px; color: var(--primary); }
         
-        .card { background: #111; border-radius: 15px; border: 1px solid #222; margin-bottom: 20px; overflow: hidden; }
-        .img-box { height: 180px; background-size: cover; background-position: center; position: relative; }
-        .tag-zero { position: absolute; top: 10px; right: 10px; background: var(--gold); color: #000; padding: 5px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; }
-        
-        .info { padding: 15px; }
-        .nome-drink { font-size: 18px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 5px; }
-        .desc { font-size: 12px; color: #888; margin-bottom: 15px; display: block; }
-        
-        .btn-order { background: var(--primary); color: #fff; border: none; width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 14px; }
-        .btn-order:active { transform: scale(0.97); }
+        .input-nome { width: 100%; padding: 18px; margin-bottom: 25px; border: 1px solid #333; background: #111; color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
+        .input-nome:focus { border-color: var(--primary); }
 
-        #status-area { display: none; text-align: center; margin-top: 50px; padding: 30px 15px; background: rgba(10,10,10,0.95); border: 2px solid var(--primary); border-radius: 20px; }
-        .x-display { font-size: 50px; font-weight: 900; margin: 20px 0; color: #fff; }
+        .card { background: #111; border-radius: 18px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; }
+        .img-container { width: 100%; height: 200px; background-size: cover; background-position: center; position: relative; }
+        .tag-zero { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
         
-        /* Tabela Favelinha S.R. */
-        .favelinha-table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 11px; color: #444; }
-        .favelinha-table td { border: 1px solid #111; padding: 10px; text-align: center; }
+        .info { padding: 20px; }
+        .nome { font-size: 20px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px; }
+        .ingredientes { font-size: 13px; color: #aaa; margin-bottom: 20px; display: block; min-height: 40px; }
+        
+        .btn { background: var(--primary); color: #fff; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+        .btn:active { transform: scale(0.98); }
 
-        /* Auto-Aprendizado (Alex) */
-        .alex-memory-box { background: #050505; border: 1px dashed var(--gold); padding: 12px; margin-top: 20px; border-radius: 10px; font-size: 10px; color: var(--gold); text-align: left; min-height: 60px; }
+        #status-area { display: none; text-align: center; margin-top: 80px; padding: 30px; background: #111; border-radius: 20px; border: 2px solid var(--primary); }
+        .aviso { font-size: 26px; font-weight: 900; color: var(--primary); margin-bottom: 15px; }
         
-        /* Overlay de Alerta Verde */
-        .flash-active { background-color: var(--neon) !important; color: #000 !important; }
+        /* Efeito de Flash para o Modo Supremacia */
+        .flash-pronto { background-color: var(--neon) !important; color: #000 !important; }
+        
+        /* Tabela Favelinha Acumulativa */
+        .favelinha { width: 100%; margin-top: 15px; border-collapse: collapse; font-size: 12px; color: #666; }
+        .favelinha td { border: 1px solid #222; padding: 8px; text-align: center; }
     </style>
 </head>
 <body>
@@ -44,113 +43,96 @@
     <div id="app">
         <div class="header">
             <div class="logo">S.A. DRINKS</div>
-            <div style="font-size: 9px; color: var(--gold); margin-top: 4px;">S.R. IDENTITY | IPI ATIVO | v13.9</div>
+            <div style="font-size: 9px; color: var(--accent); margin-top: 5px;">IPI & SYDNEY PROTOCOL ACTIVE</div>
         </div>
-
-        <input type="text" id="clienteNome" style="width:100%; padding:15px; background:#111; border:1px solid #333; color:white; border-radius:10px; margin-bottom:20px; box-sizing:border-box;" placeholder="Digite seu nome para o histórico...">
+        
+        <input type="text" id="nomeCliente" class="input-nome" placeholder="Seu nome para o brinde...">
 
         <div class="card">
-            <div class="img-box" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')">
+            <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')">
                 <div class="tag-zero">0% ÁLCOOL</div>
             </div>
             <div class="info">
-                <span class="nome-drink">QUANTUM BLUE</span>
-                <span class="desc">Curaçau Blue & Soda. Injeção de Semente Rosa v13.9.</span>
-                <button class="btn-order" onclick="processarInjecao('QUANTUM BLUE')">Solicitar Drink / Injetar</button>
+                <span class="nome">QUANTUM BLUE</span>
+                <span class="ingredientes">Curaçau Blue, Limão e Soda. Injeção de Semente Rosa v14.0.</span>
+                <button class="btn" onclick="pedir('QUANTUM BLUE')">Solicitar Drink</button>
             </div>
         </div>
 
-        <table class="favelinha-table">
-            <tr style="color: var(--blue);"><td>BAIXO</td><td>MÉDIO</td><td>ALTO</td></tr>
+        <table class="favelinha">
+            <tr style="color: var(--blue);"><td>STAKE BAIXA</td><td>STAKE MÉDIA</td><td>STAKE ALTA</td></tr>
             <tr><td>R$ 0,10</td><td>R$ 0,20</td><td>R$ 1,00</td></tr>
         </table>
     </div>
 
     <div id="status-area">
-        <div id="label-status" style="font-size: 20px; font-weight: bold; color: var(--primary);">ANALISANDO...</div>
-        <div id="valor-x" class="x-display">0.00x</div>
-        
-        <div class="alex-memory-box" id="quantum-alex">
-            [ALEX]: Sincronizando memória acumulativa...
+        <div id="msg-status" class="aviso">PREPARANDO...</div>
+        <p id="msg-detalhe" style="color: #888;">Aguardando sinal do servidor S.R.</p>
+        <div id="alex-log" style="font-size: 10px; color: var(--accent); margin-top: 20px; border-top: 1px dashed #444; padding-top: 10px;">
+            [ALEX]: Memória Quântica em Standby...
         </div>
-
-        <button class="btn-order" style="background: #222; margin-top: 20px;" onclick="location.reload()">NOVA RODADA</button>
     </div>
 
     <script>
-        // Configuração Database (Padrão Ouro S.R.)
         const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // FUNÇÃO DOS SENTIDOS (BIP + VIBRA + VERDE)
-        function dispararSensoresSR(alvo) {
-            // 1. Visão (Cor Verde)
-            document.body.classList.add('flash-active');
-            document.getElementById('status-area').style.borderColor = "#000";
-            document.getElementById('label-status').style.color = "#000";
-            document.getElementById('label-status').innerText = "ENTRA AGORA!";
-
-            // 2. Audição (Bip Quântico)
+        function dispararAlertaSonoroSupremacia() {
+            // SINAL SONORO FORTE (Ondas Quadradas para maior impacto)
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = 'sawtooth';
-            osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1);
+            
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime); // Nota Lá (A5)
+            gain.gain.setValueAtTime(0.6, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+            
             osc.connect(gain);
             gain.connect(audioCtx.destination);
+            
             osc.start();
-            osc.stop(audioCtx.currentTime + 1);
+            osc.stop(audioCtx.currentTime + 1.5);
 
-            // 3. Tato (Vibração Fibra)
-            if (navigator.vibrate) {
-                navigator.vibrate([500, 200, 500, 200, 500]);
-            }
+            // VIBRAÇÃO (SENTIDO TATO)
+            if (navigator.vibrate) navigator.vibrate([500, 110, 500, 110, 500]);
+            
+            // FLASH VISUAL (SENTIDO VISÃO)
+            document.body.classList.add('flash-pronto');
         }
 
-        function processarInjecao(drink) {
-            const nome = document.getElementById('clienteNome').value || "S.R.";
-            
-            // Ativa áudio no clique
-            const unlock = new AudioContext();
+        function pedir(drinkNome) {
+            const nomeInput = document.getElementById('nomeCliente').value.trim();
+            if (!nomeInput) { alert("Identifique-se para o protocolo!"); return; }
 
-            document.getElementById('app').style.display = 'none';
-            document.getElementById('status-area').style.display = 'block';
+            const novoPedidoRef = database.ref('pedidos').push();
+            const idPedido = novoPedidoRef.key;
 
-            // CÁLCULO S.R.: Projeção de Semente Rosa com REGRA -50%
-            const projReal = (Math.random() * 7) + 3;
-            const alvoFinal = (projReal * 0.50).toFixed(2);
-            
-            let contador = 0.00;
-            const timer = setInterval(() => {
-                contador += 0.16;
-                document.getElementById('valor-x').innerText = contador.toFixed(2) + "x";
+            novoPedidoRef.set({
+                cliente: nomeInput,
+                drink: drinkNome,
+                status: "PENDENTE",
+                timestamp: Date.now() 
+            }).then(() => {
+                document.getElementById('app').style.display = 'none';
+                document.getElementById('status-area').style.display = 'block';
+                
+                // MONITORAMENTO DO SENSOR
+                database.ref('pedidos/' + idPedido).on('value', (snapshot) => {
+                    const dados = snapshot.val();
+                    if (dados && dados.status === "PRONTO") {
+                        document.getElementById('msg-status').innerText = "🔥 DRINK LIBERADO! 🔥";
+                        document.getElementById('msg-detalhe').innerHTML = "<b>" + dados.cliente + "</b>, seu <b>" + dados.drink + "</b> está pronto!";
+                        
+                        // DISPARO DO SENSOR DE SUPREMACIA
+                        dispararAlertaSonoroSupremacia();
 
-                if (contador >= parseFloat(alvoFinal)) {
-                    clearInterval(timer);
-                    
-                    const acao = alvoFinal >= 2.0 ? "ENTRA" : "PULA";
-                    
-                    // Dispara Alertas
-                    dispararSensoresSR(alvoFinal);
-
-                    // Alex salva o histórico no Auto-Aprendizado
-                    const logMsg = `> [ALEX]: ${acao} @ ${alvoFinal}x | Operador: S.R. | Sucesso`;
-                    document.getElementById('quantum-alex').innerHTML = logMsg;
-
-                    // Salva no Firebase (Acumulativo)
-                    database.ref('pedidos').push({
-                        cliente: nome,
-                        drink: drink,
-                        status: "PRONTO",
-                        x: alvoFinal,
-                        acao: acao,
-                        timestamp: Date.now()
-                    });
-                }
-            }, 45);
+                        // ALEX: AUTO-APRENDIZADO
+                        document.getElementById('alex-log').innerText = `[ALEX]: Pedido ${idPedido} finalizado com sucesso. Dados salvos.`;
+                    }
+                });
+            });
         }
     </script>
 </body>
