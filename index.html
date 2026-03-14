@@ -32,18 +32,7 @@
 
         <div id="cardapio">
             <div class="card">
-                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500&q=80')">
-                    <div class="tag-zero">0% ÁLCOOL</div>
-                </div>
-                <div class="info">
-                    <span class="nome">QUANTUM BLUE</span>
-                    <span class="ingredientes">Curaçau Blue (Zero), Limão Siciliano e Soda.</span>
-                    <button class="btn" onclick="pedir('QUANTUM BLUE')">SOLICITAR DRINK</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1595981267035-23a022d64d1f?w=500&q=80')">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1595981267035-23a022d64d1f?auto=format&fit=crop&w=500&q=80')">
                     <div class="tag-zero">0% ÁLCOOL</div>
                 </div>
                 <div class="info">
@@ -54,40 +43,7 @@
             </div>
 
             <div class="card">
-                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1546171753-97d7676e4602?w=500&q=80')">
-                    <div class="tag-zero">0% ÁLCOOL</div>
-                </div>
-                <div class="info">
-                    <span class="nome">TROPICAL YELLOW</span>
-                    <span class="ingredientes">Abacaxi, Gengibre selecionado e Água com Gás.</span>
-                    <button class="btn" onclick="pedir('TROPICAL YELLOW')">SOLICITAR DRINK</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500&q=80')">
-                    <div class="tag-zero">0% ÁLCOOL</div>
-                </div>
-                <div class="info">
-                    <span class="nome">COFFEE TONIC</span>
-                    <span class="ingredientes">Café especial gelado, tônica e toque cítrico refrescante.</span>
-                    <button class="btn" onclick="pedir('COFFEE TONIC')">SOLICITAR DRINK</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500&q=80')">
-                    <div class="tag-zero">0% ÁLCOOL</div>
-                </div>
-                <div class="info">
-                    <span class="nome">GREEN VIBE</span>
-                    <span class="ingredientes">Xarope de Maçã Verde, Hortelã fresca e Soda.</span>
-                    <button class="btn" onclick="pedir('GREEN VIBE')">SOLICITAR DRINK</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1536935338213-d2c12334810a?w=500&q=80')">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1536935338213-d2c12334810a?auto=format&fit=crop&w=500&q=80')">
                     <div class="tag-zero">0% ÁLCOOL</div>
                 </div>
                 <div class="info">
@@ -96,12 +52,34 @@
                     <button class="btn" onclick="pedir('SUNSET PEACH')">SOLICITAR DRINK</button>
                 </div>
             </div>
+
+            <div class="card">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=500&q=80')">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                </div>
+                <div class="info">
+                    <span class="nome">QUANTUM BLUE</span>
+                    <span class="ingredientes">Curaçau Blue (Zero), Limão Siciliano e Soda.</span>
+                    <button class="btn" onclick="pedir('QUANTUM BLUE')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=500&q=80')">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                </div>
+                <div class="info">
+                    <span class="nome">COFFEE TONIC</span>
+                    <span class="ingredientes">Café especial gelado, tônica e toque cítrico refrescante.</span>
+                    <button class="btn" onclick="pedir('COFFEE TONIC')">SOLICITAR DRINK</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <div id="status-area">
         <div id="msg-status" style="font-size: 24px; font-weight: bold; color: var(--primary); margin-bottom: 15px;">PREPARANDO...</div>
-        <p id="msg-detalhe" style="color: #888;">Aguarde o sinal para retirar.</p>
+        <p id="msg-detalhe" style="color: #888;">Aguarde o sinal para retirar seu drink.</p>
         <button class="btn" style="margin-top: 30px; background: #222;" onclick="location.reload()">Novo Pedido</button>
     </div>
 
@@ -109,24 +87,6 @@
         const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-
-        function dispararAlertaRitmo() {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            let tempo = audioCtx.currentTime;
-            for (let i = 0; i < 5; i++) {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'square';
-                osc.frequency.setValueAtTime(1000, tempo);
-                gain.gain.setValueAtTime(0.6, tempo);
-                gain.gain.exponentialRampToValueAtTime(0.01, tempo + 0.1);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(tempo); osc.stop(tempo + 0.15);
-                tempo += 0.2;
-            }
-            if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
-            document.body.classList.add('flash-pronto');
-        }
 
         function pedir(drinkNome) {
             const nomeInput = document.getElementById('nomeCliente').value.trim();
@@ -140,7 +100,6 @@
                     if (dados && dados.status === "PRONTO") {
                         document.getElementById('msg-status').innerText = "🔥 LIBERADO! 🔥";
                         document.getElementById('msg-status').style.color = "#00ff41";
-                        dispararAlertaRitmo();
                     }
                 });
             });
