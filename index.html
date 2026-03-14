@@ -10,31 +10,24 @@
         :root { --primary: #28a745; --accent: #ff9f43; --neon: #00ff41; }
         body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
         #app { max-width: 450px; margin: auto; }
-        .header { text-align: center; padding: 25px 0; border-bottom: 1px solid #222; margin-bottom: 20px; }
+        .header { text-align: center; padding: 20px 0; border-bottom: 1px solid #222; margin-bottom: 20px; }
         .logo { font-size: 28px; font-weight: bold; letter-spacing: 4px; color: var(--primary); }
         .input-nome { width: 100%; padding: 18px; margin-bottom: 25px; border: 1px solid #333; background: #111; color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
         
-        .card { background: #111; border-radius: 18px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; display: flex !important; flex-direction: column; }
+        .card { background: #111; border-radius: 18px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; }
         
+        /* Container de imagem blindado com SVG */
         .img-container { 
             width: 100%; 
-            height: 220px; 
-            background-size: cover; 
-            background-position: center; 
+            height: 200px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
-            background-repeat: no-repeat;
-            display: block !important;
+            background: #1a1a1a;
         }
         
-        /* Fallbacks de cor sólida caso a internet falhe */
-        .f-blue { background-color: #0044ff; }
-        .f-pink { background-color: #ff0077; }
-        .f-yellow { background-color: #ffcc00; }
-        .f-coffee { background-color: #4b2c20; }
-        .f-green { background-color: #00ff41; }
-        .f-peach { background-color: #ff6600; }
-
-        .tag-zero { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .tag-zero { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; z-index: 2; }
         .info { padding: 20px; }
         .nome { font-size: 20px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px; }
         .ingredientes { font-size: 13px; color: #aaa; line-height: 1.5; margin-bottom: 20px; display: block; min-height: 40px; }
@@ -49,19 +42,9 @@
 
         <div id="cardapio">
             <div class="card">
-                <div class="img-container f-blue" style="background-image: url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500')">
+                <div class="img-container">
                     <div class="tag-zero">0% ÁLCOOL</div>
-                </div>
-                <div class="info">
-                    <span class="nome">QUANTUM BLUE</span>
-                    <span class="ingredientes">Curaçau Blue (Zero), Limão Siciliano e Soda.</span>
-                    <button class="btn" onclick="pedir('QUANTUM BLUE')">SOLICITAR DRINK</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img-container f-pink" style="background-image: url('https://images.unsplash.com/photo-1595981267035-23a022d64d1f?w=500')">
-                    <div class="tag-zero">0% ÁLCOOL</div>
+                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#ff0077" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/><path d="M12 17V12"/><path d="M12 8H12.01"/></svg>
                 </div>
                 <div class="info">
                     <span class="nome">PINK S.A.</span>
@@ -71,46 +54,74 @@
             </div>
 
             <div class="card">
-                <div class="img-container f-yellow" style="background-image: url('https://images.unsplash.com/photo-1546171753-97d7676e4602?w=500')">
+                <div class="img-container">
                     <div class="tag-zero">0% ÁLCOOL</div>
-                </div>
-                <div class="info">
-                    <span class="nome">TROPICAL YELLOW</span>
-                    <span class="ingredientes">Abacaxi, Gengibre selecionado e Água com Gás.</span>
-                    <button class="btn" onclick="pedir('TROPICAL YELLOW')">SOLICITAR DRINK</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img-container f-coffee" style="background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500')">
-                    <div class="tag-zero">0% ÁLCOOL</div>
-                </div>
-                <div class="info">
-                    <span class="nome">COFFEE TONIC</span>
-                    <span class="ingredientes">Café especial gelado, tônica e toque cítrico refrescante.</span>
-                    <button class="btn" onclick="pedir('COFFEE TONIC')">SOLICITAR DRINK</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img-container f-green" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')">
-                    <div class="tag-zero">0% ÁLCOOL</div>
-                </div>
-                <div class="info">
-                    <span class="nome">GREEN VIBE</span>
-                    <span class="ingredientes">Xarope de Maçã Verde, Hortelã fresca e Soda.</span>
-                    <button class="btn" onclick="pedir('GREEN VIBE')">SOLICITAR DRINK</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img-container f-peach" style="background-image: url('https://images.unsplash.com/photo-1536935338213-d2c12334810a?w=500')">
-                    <div class="tag-zero">0% ÁLCOOL</div>
+                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#ff6600" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18C17.5523 18 18 17.5523 18 17V7C18 6.44772 17.5523 6 17 6H7C6.44772 6 6 6.44772 6 7V17C6 17.5523 6.44772 18 7 18H17Z"/><path d="M12 15V9"/><path d="M9 12H15"/></svg>
                 </div>
                 <div class="info">
                     <span class="nome">SUNSET PEACH</span>
                     <span class="ingredientes">Pêssego, Suco de Laranja e Xarope de Groselha.</span>
                     <button class="btn" onclick="pedir('SUNSET PEACH')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#ff0000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 17L12 22L22 17"/><path d="M2 12L12 17L22 12"/></svg>
+                </div>
+                <div class="info">
+                    <span class="nome">RED SUPREME</span>
+                    <span class="ingredientes">Frutas Vermelhas, Grenadine e Citrus.</span>
+                    <button class="btn" onclick="pedir('RED SUPREME')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#0044ff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8H6C4.89543 8 4 8.89543 4 10V19C4 20.1046 4.89543 21 6 21H18C19.1046 21 20 20.1046 20 19V10C20 8.89543 19.1046 8 18 8Z"/><path d="M16 8V5C16 3.89543 15.1046 3 14 3H10C8.89543 3 8 3.89543 8 5V8"/></svg>
+                </div>
+                <div class="info">
+                    <span class="nome">QUANTUM BLUE</span>
+                    <span class="ingredientes">Curaçau Blue (Zero), Limão Siciliano e Soda.</span>
+                    <button class="btn" onclick="pedir('QUANTUM BLUE')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#ffcc00" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                </div>
+                <div class="info">
+                    <span class="nome">TROPICAL YELLOW</span>
+                    <span class="ingredientes">Abacaxi, Gengibre e Água com Gás.</span>
+                    <button class="btn" onclick="pedir('TROPICAL YELLOW')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#4b2c20" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                </div>
+                <div class="info">
+                    <span class="nome">COFFEE TONIC</span>
+                    <span class="ingredientes">Café especial gelado, tônica e toque cítrico.</span>
+                    <button class="btn" onclick="pedir('COFFEE TONIC')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#00ff41" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 11 6a7 7 0 0 1 0 14Z"/><path d="M11 14v4"/><path d="M11 10v2"/><path d="M14 11l-6 2"/></svg>
+                </div>
+                <div class="info">
+                    <span class="nome">GREEN VIBE</span>
+                    <span class="ingredientes">Xarope de Maçã Verde, Hortelã fresca e Soda.</span>
+                    <button class="btn" onclick="pedir('GREEN VIBE')">SOLICITAR DRINK</button>
                 </div>
             </div>
         </div>
@@ -135,4 +146,5 @@
         }
     </script>
 </body>
-</html>
+    </html>
+                        
