@@ -14,12 +14,12 @@
         .logo { font-size: 28px; font-weight: bold; letter-spacing: 4px; color: var(--primary); }
         .input-nome { width: 100%; padding: 18px; margin-bottom: 25px; border: 1px solid #333; background: #111; color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
         .card { background: #111; border-radius: 18px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; }
-        .img-container { width: 100%; height: 220px; background-size: cover; background-position: center; position: relative; }
+        .img-container { width: 100%; height: 220px; background-size: cover; background-position: center; background-color: #1a1a1a; position: relative; }
         .tag-zero { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
         .info { padding: 20px; }
         .nome { font-size: 20px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px; }
         .ingredientes { font-size: 13px; color: #aaa; line-height: 1.5; margin-bottom: 20px; display: block; min-height: 40px; }
-        .btn { background: var(--primary); color: #fff; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
+        .btn { background: var(--primary); color: #fff; border: none; padding: 18px; width: 100%; border-radius: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; font-size: 14px; }
         #status-area { display: none; text-align: center; margin-top: 80px; padding: 30px; background: #111; border-radius: 20px; border: 1px solid var(--primary); }
         .flash-pronto { background-color: var(--neon) !important; color: #000 !important; }
     </style>
@@ -30,12 +30,78 @@
         <div class="header"><div class="logo">S.A. DRINKS</div></div>
         <input type="text" id="nomeCliente" class="input-nome" placeholder="Seu nome para o brinde...">
 
-        <div id="cardapio"></div>
+        <div id="cardapio">
+            <div class="card">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500')">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                </div>
+                <div class="info">
+                    <span class="nome">QUANTUM BLUE</span>
+                    <span class="ingredientes">Curaçau Blue (Zero), Limão Siciliano e Soda.</span>
+                    <button class="btn" onclick="pedir('QUANTUM BLUE')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500')">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                </div>
+                <div class="info">
+                    <span class="nome">PINK S.A.</span>
+                    <span class="ingredientes">Morangos frescos, Alecrim e Água Tônica Premium.</span>
+                    <button class="btn" onclick="pedir('PINK S.A.')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1546171753-97d7676e4602?w=500')">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                </div>
+                <div class="info">
+                    <span class="nome">TROPICAL YELLOW</span>
+                    <span class="ingredientes">Abacaxi, Gengibre selecionado e Água com Gás.</span>
+                    <button class="btn" onclick="pedir('TROPICAL YELLOW')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500')">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                </div>
+                <div class="info">
+                    <span class="nome">COFFEE TONIC</span>
+                    <span class="ingredientes">Café especial gelado, tônica e toque cítrico refrescante.</span>
+                    <button class="btn" onclick="pedir('COFFEE TONIC')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500')">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                </div>
+                <div class="info">
+                    <span class="nome">GREEN VIBE</span>
+                    <span class="ingredientes">Xarope de Maçã Verde, Hortelã fresca e Soda.</span>
+                    <button class="btn" onclick="pedir('GREEN VIBE')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1536935338213-d2c12334810a?w=500')">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                </div>
+                <div class="info">
+                    <span class="nome">SUNSET PEACH</span>
+                    <span class="ingredientes">Pêssego, Suco de Laranja e Xarope de Groselha.</span>
+                    <button class="btn" onclick="pedir('SUNSET PEACH')">SOLICITAR DRINK</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div id="status-area">
         <div id="msg-status" style="font-size: 24px; font-weight: bold; color: var(--primary); margin-bottom: 15px;">PREPARANDO...</div>
-        <p id="msg-detalhe" style="color: #888;">Seu drink está em processo de injeção.</p>
+        <p id="msg-detalhe" style="color: #888;">Aguarde o sinal sonoro para retirar.</p>
         <button class="btn" style="margin-top: 30px; background: #222;" onclick="location.reload()">Novo Pedido</button>
     </div>
 
@@ -43,29 +109,6 @@
         const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-
-        // LISTA COM IMAGENS CORRIGIDAS
-        const drinks = [
-            { n: "QUANTUM BLUE", d: "Curaçau Blue (Zero), Limão Siciliano e Soda.", i: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500" },
-            { n: "PINK S.A.", d: "Morangos frescos, Alecrim e Água Tônica Premium.", i: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=500" },
-            { n: "TROPICAL YELLOW", d: "Abacaxi, Gengibre e Água com Gás.", i: "https://images.unsplash.com/photo-1587223962930-cb7f31384c19?w=500" },
-            { n: "COFFEE TONIC", d: "Café especial gelado, tônica e toque cítrico.", i: "https://images.unsplash.com/photo-1541167760496-162955ed8a9f?w=500" },
-            { n: "GREEN VIBE", d: "Maçã Verde, Hortelã fresca e Soda.", i: "https://images.unsplash.com/photo-1592663527359-cf6642f54cff?w=500" },
-            { n: "SUNSET PEACH", d: "Pêssego, Suco de Laranja e Xarope de Groselha.", i: "https://images.unsplash.com/photo-1499638673689-79a0b5115d87?w=500" }
-        ];
-
-        const container = document.getElementById('cardapio');
-        drinks.forEach(drk => {
-            container.innerHTML += `
-                <div class="card">
-                    <div class="img-container" style="background-image: url('${drk.i}')"><div class="tag-zero">0% ÁLCOOL</div></div>
-                    <div class="info">
-                        <span class="nome">${drk.n}</span>
-                        <span class="ingredientes">${drk.d}</span>
-                        <button class="btn" onclick="pedir('${drk.n}')">Solicitar Drink</button>
-                    </div>
-                </div>`;
-        });
 
         function dispararAlertaRitmo() {
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -104,4 +147,5 @@
         }
     </script>
 </body>
-</html>
+    </html>
+    
