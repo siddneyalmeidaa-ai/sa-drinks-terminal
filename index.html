@@ -3,35 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>S.A. DRINKS - EXPERIENCE</title>
+    <title>S.A. DRINKS - EXPERIENCE V2</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        :root { --primary: #28a745; --accent: #ff9f43; --neon: #00ff41; }
+        :root { --primary: #28a745; --accent: #ff9f43; --neon: #00ff41; --glass: rgba(255,255,255,0.05); }
         body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
         #app { max-width: 450px; margin: auto; }
-        .header { text-align: center; padding: 20px 0; border-bottom: 1px solid #222; margin-bottom: 20px; }
-        .logo { font-size: 28px; font-weight: bold; letter-spacing: 4px; color: var(--primary); }
-        .input-nome { width: 100%; padding: 18px; margin-bottom: 25px; border: 1px solid #333; background: #111; color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
         
-        .card { background: #111; border-radius: 18px; overflow: hidden; margin-bottom: 25px; border: 1px solid #222; }
+        .header { text-align: center; padding: 25px 0; border-bottom: 1px solid #222; margin-bottom: 25px; }
+        .logo { font-size: 28px; font-weight: bold; letter-spacing: 4px; color: var(--primary); text-shadow: 0 0 10px rgba(40, 167, 69, 0.4); }
         
-        /* Container de imagem blindado com SVG */
+        .input-nome { width: 100%; padding: 18px; margin-bottom: 25px; border: 1px solid #333; background: #111; color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 16px; transition: 0.3s; }
+        .input-nome:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(40, 167, 69, 0.2); }
+        
+        .card { background: #111; border-radius: 20px; overflow: hidden; margin-bottom: 30px; border: 1px solid #222; position: relative; }
+        
+        /* Container de Imagem com Foto Ilustrativa */
         .img-container { 
-            width: 100%; 
-            height: 200px; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            background: #1a1a1a;
+            width: 100%; height: 240px; background-size: cover; background-position: center;
+            position: relative; display: flex; align-items: flex-end;
         }
         
-        .tag-zero { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #000; padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; text-transform: uppercase; z-index: 2; }
-        .info { padding: 20px; }
-        .nome { font-size: 20px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 8px; }
-        .ingredientes { font-size: 13px; color: #aaa; line-height: 1.5; margin-bottom: 20px; display: block; min-height: 40px; }
-        .btn { background: var(--primary); color: #fff; border: none; padding: 18px; width: 100%; border-radius: 10px; font-weight: bold; text-transform: uppercase; cursor: pointer; font-size: 14px; }
+        .overlay-glass { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, #111 5%, transparent 60%); }
+        
+        .tag-zero { position: absolute; top: 15px; right: 15px; background: var(--accent); color: #000; padding: 6px 14px; border-radius: 20px; font-size: 10px; font-weight: bold; text-transform: uppercase; z-index: 5; }
+        .tag-copo { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 9px; border: 1px solid #444; backdrop-filter: blur(5px); z-index: 5; }
+
+        .info { padding: 20px; position: relative; z-index: 6; }
+        .nome { font-size: 22px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 5px; }
+        .ingredientes { font-size: 13px; color: #aaa; line-height: 1.5; margin-bottom: 20px; display: block; min-height: 40px; font-style: italic; }
+        
+        .btn { background: var(--primary); color: #fff; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: bold; text-transform: uppercase; cursor: pointer; font-size: 14px; transition: 0.3s; }
+        .btn:active { transform: scale(0.98); background: #218838; }
     </style>
 </head>
 <body>
@@ -42,9 +46,10 @@
 
         <div id="cardapio">
             <div class="card">
-                <div class="img-container">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=500&q=80');">
                     <div class="tag-zero">0% ÁLCOOL</div>
-                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#ff0077" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"/><path d="M12 17V12"/><path d="M12 8H12.01"/></svg>
+                    <div class="tag-copo">TAÇA GIN 480ML</div>
+                    <div class="overlay-glass"></div>
                 </div>
                 <div class="info">
                     <span class="nome">PINK S.A.</span>
@@ -54,45 +59,36 @@
             </div>
 
             <div class="card">
-                <div class="img-container">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1536935338788-846bb9981813?auto=format&fit=crop&w=500&q=80');">
                     <div class="tag-zero">0% ÁLCOOL</div>
-                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#ff6600" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M17 18C17.5523 18 18 17.5523 18 17V7C18 6.44772 17.5523 6 17 6H7C6.44772 6 6 6.44772 6 7V17C6 17.5523 6.44772 18 7 18H17Z"/><path d="M12 15V9"/><path d="M9 12H15"/></svg>
+                    <div class="tag-copo">TAÇA COUPÊ 200ML</div>
+                    <div class="overlay-glass"></div>
                 </div>
                 <div class="info">
                     <span class="nome">SUNSET PEACH</span>
-                    <span class="ingredientes">Pêssego, Suco de Laranja e Xarope de Groselha.</span>
+                    <span class="ingredientes">Purê de Pêssego, Suco de Laranja e Xarope de Groselha.</span>
                     <button class="btn" onclick="pedir('SUNSET PEACH')">SOLICITAR DRINK</button>
                 </div>
             </div>
 
             <div class="card">
-                <div class="img-container">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1551024709-8f23befc6f87?auto=format&fit=crop&w=500&q=80');">
                     <div class="tag-zero">0% ÁLCOOL</div>
-                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#ff0000" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 17L12 22L22 17"/><path d="M2 12L12 17L22 12"/></svg>
-                </div>
-                <div class="info">
-                    <span class="nome">RED SUPREME</span>
-                    <span class="ingredientes">Frutas Vermelhas, Grenadine e Citrus.</span>
-                    <button class="btn" onclick="pedir('RED SUPREME')">SOLICITAR DRINK</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img-container">
-                    <div class="tag-zero">0% ÁLCOOL</div>
-                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#0044ff" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8H6C4.89543 8 4 8.89543 4 10V19C4 20.1046 4.89543 21 6 21H18C19.1046 21 20 20.1046 20 19V10C20 8.89543 19.1046 8 18 8Z"/><path d="M16 8V5C16 3.89543 15.1046 3 14 3H10C8.89543 3 8 3.89543 8 5V8"/></svg>
+                    <div class="tag-copo">COPO LONG DRINK 330ML</div>
+                    <div class="overlay-glass"></div>
                 </div>
                 <div class="info">
                     <span class="nome">QUANTUM BLUE</span>
-                    <span class="ingredientes">Curaçau Blue (Zero), Limão Siciliano e Soda.</span>
+                    <span class="ingredientes">Curaçau Blue Zero, Limão Siciliano e Soda.</span>
                     <button class="btn" onclick="pedir('QUANTUM BLUE')">SOLICITAR DRINK</button>
                 </div>
             </div>
 
             <div class="card">
-                <div class="img-container">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=500&q=80');">
                     <div class="tag-zero">0% ÁLCOOL</div>
-                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#ffcc00" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    <div class="tag-copo">COPO HURRICANE 400ML</div>
+                    <div class="overlay-glass"></div>
                 </div>
                 <div class="info">
                     <span class="nome">TROPICAL YELLOW</span>
@@ -102,21 +98,10 @@
             </div>
 
             <div class="card">
-                <div class="img-container">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1544145945-f904253d0c7b?auto=format&fit=crop&w=500&q=80');">
                     <div class="tag-zero">0% ÁLCOOL</div>
-                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#4b2c20" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-                </div>
-                <div class="info">
-                    <span class="nome">COFFEE TONIC</span>
-                    <span class="ingredientes">Café especial gelado, tônica e toque cítrico.</span>
-                    <button class="btn" onclick="pedir('COFFEE TONIC')">SOLICITAR DRINK</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="img-container">
-                    <div class="tag-zero">0% ÁLCOOL</div>
-                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#00ff41" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 11 6a7 7 0 0 1 0 14Z"/><path d="M11 14v4"/><path d="M11 10v2"/><path d="M14 11l-6 2"/></svg>
+                    <div class="tag-copo">COPO ROCKS 250ML</div>
+                    <div class="overlay-glass"></div>
                 </div>
                 <div class="info">
                     <span class="nome">GREEN VIBE</span>
@@ -124,27 +109,42 @@
                     <button class="btn" onclick="pedir('GREEN VIBE')">SOLICITAR DRINK</button>
                 </div>
             </div>
+            
+            <div class="card">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=500&q=80');">
+                    <div class="tag-zero">0% ÁLCOOL</div>
+                    <div class="tag-copo">COPO HIGHBALL 350ML</div>
+                    <div class="overlay-glass"></div>
+                </div>
+                <div class="info">
+                    <span class="nome">COFFEE TONIC</span>
+                    <span class="ingredientes">Grãos de Café Arábica, Tônica e Limão Siciliano.</span>
+                    <button class="btn" onclick="pedir('COFFEE TONIC')">SOLICITAR DRINK</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
+        // Configuração Database S.A.
         const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         function pedir(drinkNome) {
             const nomeInput = document.getElementById('nomeCliente').value.trim();
-            if (!nomeInput) { alert("Digite seu nome!"); return; }
+            if (!nomeInput) { alert("Por favor, digite seu nome!"); return; }
+            
             database.ref('pedidos').push({
                 cliente: nomeInput,
                 drink: drinkNome,
                 status: "pendente",
                 timestamp: Date.now()
             }).then(() => {
-                alert("Pedido de " + drinkNome + " enviado!");
+                alert("Pedido de " + drinkNome + " enviado com sucesso!");
             });
         }
     </script>
 </body>
     </html>
-                        
+    
