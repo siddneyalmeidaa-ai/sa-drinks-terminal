@@ -3,96 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>S.A. DRINKS - CLIENTE</title>
+    <title>S.A. DRINKS - CARDÁPIO OFICIAL</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         :root { --primary: #28a745; --accent: #ff9f43; }
-        body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 15px; }
-        .card { background: #111; border-radius: 15px; margin-bottom: 20px; overflow: hidden; border: 1px solid #222; }
-        .img { width: 100%; height: 200px; background-size: cover; background-position: center; }
-        .info { padding: 15px; }
-        .btn { background: var(--primary); color: #fff; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; }
-        #tela-preparo { display: none; text-align: center; padding-top: 50px; }
-        .status-badge { color: var(--accent); font-size: 24px; font-weight: bold; margin: 20px 0; display: block; }
+        body { background: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
+        .card { background: #111; border-radius: 20px; margin-bottom: 25px; overflow: hidden; border: 1px solid #222; }
+        .img { width: 100%; height: 230px; background-size: cover; background-position: center; position: relative; }
+        .tag { position: absolute; top: 10px; right: 10px; background: var(--accent); color: #00; padding: 5px 10px; border-radius: 10px; font-size: 10px; font-weight: bold; }
+        .copo { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 5px; font-size: 9px; border: 1px solid #444; }
+        .info { padding: 20px; }
+        .nome { font-size: 22px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 5px; }
+        .ingredientes { font-size: 13px; color: #aaa; line-height: 1.4; display: block; min-height: 40px; }
+        .btn { background: var(--primary); color: #fff; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+        #espera { display: none; text-align: center; padding-top: 100px; }
+        .status { font-size: 26px; color: var(--accent); font-weight: bold; margin: 20px 0; display: block; }
     </style>
 </head>
 <body>
 
     <div id="app">
-        <div id="cardapio">
-            <h2 style="text-align:center; color: var(--primary);">S.A. DRINKS</h2>
-            <input type="text" id="nome" placeholder="Seu nome..." style="width:100%; padding:15px; margin-bottom:20px; background:#111; color:#fff; border:1px solid #333; border-radius:10px;">
+        <div id="menu">
+            <h1 style="text-align:center; letter-spacing: 5px; color: var(--primary);">S.A. DRINKS</h1>
+            <input type="text" id="cliente" placeholder="SEU NOME..." style="width:100%; padding:18px; background:#0a0a0a; border:1px solid #333; color:#fff; border-radius:12px; margin-bottom:25px; box-sizing: border-box;">
             
             <div id="lista"></div>
         </div>
 
-        <div id="tela-preparo">
-            <h2 id="status-txt">AGUARDANDO COMANDO...</h2>
-            <span id="status-badge" class="status-badge">EM PREPARO</span>
-            <p id="instrucao">Seu drink aparecerá aqui quando estiver pronto.</p>
-            <button onclick="location.reload()" style="background:#222; color:#888; border:none; padding:10px; border-radius:5px; margin-top:50px;">NOVO PEDIDO</button>
+        <div id="espera">
+            <h2 id="msg-topo">PEDIDO ENVIADO!</h2>
+            <div style="border: 3px solid #222; border-top-color: var(--primary); width: 40px; height: 40px; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto;"></div>
+            <span id="label" class="status">PREPARANDO...</span>
+            <p id="sub" style="color: #666;">Aguarde o BIP para retirar.</p>
+            <button onclick="location.reload()" id="btn-novo" style="display:none; background:#222; color:#fff; border:none; padding:15px; border-radius:10px; width:100%; margin-top:40px;">NOVO PEDIDO</button>
         </div>
     </div>
 
     <script>
-        const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        const db = firebase.initializeApp({ databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" }).database();
 
+        // COMPOSIÇÃO BASEADA NA LOGÍSTICA
         const drinks = [
-            { n: "PINK S.A.", c: "TAÇA GIN 480ML", i: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400" },
-            { n: "QUANTUM BLUE", c: "COPO LONG DRINK 330ML", i: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400" },
-            { n: "TROPICAL YELLOW", c: "COPO HURRICANE 400ML", i: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400" },
-            { n: "GREEN DETOX", c: "COPO ROCKS 250ML", i: "https://images.unsplash.com/photo-1544145945-f904253d0c7b?w=400" },
-            { n: "SUNSET PEACH", c: "TAÇA COUPÊ 200ML", i: "https://images.unsplash.com/photo-1536935338788-846bb9981813?w=400" },
-            { n: "COFFEE TONIC", c: "COPO HIGHBALL 350ML", i: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=400" }
+            { n: "PINK S.A.", c: "TAÇA GIN 480ML", i: "Morango in natura, Alecrim, Xarope de Morango e Tônica.", f: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500" },
+            { n: "QUANTUM BLUE", c: "COPO LONG DRINK 330ML", i: "Curaçau Blue Zero, Limão Siciliano e Soda.", f: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500" },
+            { n: "TROPICAL YELLOW", c: "COPO HURRICANE 400ML", i: "Abacaxi, Gengibre, Xarope de Gengibre e Água com Gás.", f: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500" },
+            { n: "GREEN DETOX", c: "COPO ROCKS 250ML", i: "Xarope de Maçã Verde, Hortelã Fresca e Soda.", f: "https://images.unsplash.com/photo-1544145945-f904253d0c7b?w=500" },
+            { n: "SUNSET PEACH", c: "TAÇA COUPÊ 200ML", i: "Xarope/Purê de Pêssego, Limão Taiti e Soda.", f: "https://images.unsplash.com/photo-1536935338788-846bb9981813?w=500" },
+            { n: "COFFEE TONIC", c: "COPO HIGHBALL 350ML", i: "Grãos de Café Arábica, Xarope de Caramelo e Tônica.", f: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=500" }
         ];
 
-        const listaDiv = document.getElementById('lista');
+        const lista = document.getElementById('lista');
         drinks.forEach(d => {
-            listaDiv.innerHTML += `
+            lista.innerHTML += `
                 <div class="card">
-                    <div class="img" style="background-image:url('${d.i}')"></div>
+                    <div class="img" style="background-image:url('${d.f}')">
+                        <div class="tag">0% ÁLCOOL</div>
+                        <div class="copo">${d.c}</div>
+                    </div>
                     <div class="info">
-                        <b style="color:var(--primary)">${d.n}</b><br>
-                        <small style="color:#666">${d.c}</small><br><br>
-                        <button class="btn" onclick="fazerPedido('${d.n}')">SOLICITAR</button>
+                        <span class="nome">${d.n}</span>
+                        <span class="ingredientes">${d.i}</span>
+                        <button class="btn" onclick="pedir('${d.n}')">SOLICITAR DRINK</button>
                     </div>
                 </div>`;
         });
 
         function bip() {
-            const context = new AudioContext();
-            const osc = context.createOscillator();
-            const gain = context.createGain();
-            osc.connect(gain); gain.connect(context.destination);
-            osc.start(); osc.stop(context.currentTime + 0.3);
+            const ctx = new AudioContext();
+            const osc = ctx.createOscillator();
+            const g = ctx.createGain();
+            osc.connect(g); g.connect(ctx.destination);
+            osc.frequency.value = 880;
+            osc.start(); osc.stop(ctx.currentTime + 0.4);
             if(navigator.vibrate) navigator.vibrate([300, 100, 300]);
         }
 
-        function fazerPedido(drink) {
-            const nome = document.getElementById('nome').value;
+        function pedir(drink) {
+            const nome = document.getElementById('cliente').value.trim();
             if(!nome) return alert("Digite seu nome!");
 
-            const novoPedido = db.ref('pedidos').push();
-            novoPedido.set({ cliente: nome, drink: drink, status: "PREPARANDO" });
+            const ref = db.ref('pedidos').push();
+            ref.set({ cliente: nome, drink: drink, status: "PENDENTE" });
 
-            document.getElementById('cardapio').style.display = 'none';
-            document.getElementById('tela-preparo').style.display = 'block';
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('espera').style.display = 'block';
 
-            // ESCUTA O COMANDO DO S.A. (VOCÊ)
-            novoPedido.on('value', (snap) => {
-                const data = snap.val();
-                if(data.status === "PRONTO") {
+            // ESCUTA O SEU COMANDO MANUAL
+            ref.on('value', snap => {
+                if(snap.val() && snap.val().status === "PRONTO") {
                     bip();
-                    document.getElementById('status-txt').innerText = "LIBERADO!";
-                    document.getElementById('status-badge').innerText = "✓ PRONTO";
-                    document.getElementById('status-badge').style.color = "#28a745";
-                    document.getElementById('instrucao').innerText = "Retire agora no balcão!";
+                    document.getElementById('msg-topo').innerText = "PRONTO!";
+                    document.getElementById('label').innerText = "RETIRE NO BALCÃO!";
+                    document.getElementById('label').style.color = "#28a745";
+                    document.getElementById('sub').innerText = "S.A. Drinks agradece!";
+                    document.getElementById('btn-novo').style.display = 'block';
                 }
             });
         }
     </script>
+    <style> @keyframes spin { 100% { transform: rotate(360deg); } } </style>
 </body>
 </html>
