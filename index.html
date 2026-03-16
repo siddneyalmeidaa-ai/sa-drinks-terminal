@@ -7,90 +7,40 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #000; color: white; margin: 0; padding: 10px; }
-        h1 { color: #28a745; text-align: center; text-transform: uppercase; font-size: 26px; margin: 25px 0; letter-spacing: 2px; }
-        .input-cliente { width: 90%; padding: 18px; border-radius: 15px; border: 1px solid #333; background: #111; color: white; margin: 0 auto 25px auto; display: block; font-size: 16px; outline: none; box-sizing: border-box; }
-        .container { display: grid; gap: 25px; max-width: 500px; margin: auto; padding-bottom: 50px; }
-        .card { background: #111; border-radius: 25px; overflow: hidden; border: 1px solid #222; position: relative; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
-        .foto-drink { width: 100%; height: 280px; object-fit: cover; filter: brightness(0.9); display: block; }
-        .tag-info { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.8); padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; border: 1px solid #444; color: #fff; }
-        .tag-alcool { position: absolute; top: 15px; right: 15px; background: #ffc107; color: black; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
-        .conteudo { padding: 22px; }
-        .nome { color: #28a745; font-size: 24px; font-weight: bold; text-transform: uppercase; margin-bottom: 8px; }
-        .composicao { color: #bbb; font-size: 14px; line-height: 1.5; margin-bottom: 20px; min-height: 42px; }
-        .btn-solicitar { background: #28a745; color: white; border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 100; text-align: center; }
-        .loader { width: 60px; height: 60px; border: 6px solid #222; border-top-color: #28a745; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 20px; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
+        body { font-family: sans-serif; background: #000; color: #fff; margin: 0; padding: 10px; }
+        h1 { color: #28a745; text-align: center; font-size: 24px; margin: 20px 0; text-transform: uppercase; }
+        .input-cliente { width: 90%; padding: 15px; border-radius: 10px; border: 1px solid #333; background: #111; color: #fff; margin: 0 auto 20px auto; display: block; font-size: 16px; }
+        .container { display: grid; gap: 20px; max-width: 450px; margin: auto; padding-bottom: 40px; }
+        .card { background: #111; border-radius: 20px; overflow: hidden; border: 1px solid #222; position: relative; }
+        .foto { width: 100%; height: 260px; object-fit: cover; filter: brightness(0.9); }
+        .tag-copo { position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.8); padding: 5px 10px; border-radius: 6px; font-size: 10px; font-weight: bold; border: 1px solid #444; }
+        .info { padding: 20px; }
+        .nome { color: #28a745; font-size: 22px; font-weight: bold; margin-bottom: 8px; }
+        .comp { color: #bbb; font-size: 14px; line-height: 1.4; margin-bottom: 20px; }
+        .btn { background: #28a745; color: #fff; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 100; text-align: center; }
     </style>
 </head>
 <body>
 
     <div id="loading" class="overlay">
-        <div class="loader"></div>
-        <h2 style="color: #28a745; font-size: 28px; margin: 10px 0;">PEDIDO ENVIADO!</h2>
-        <p id="status-msg" style="font-size: 18px; color: #fff;">PREPARANDO NO BALCÃO...</p>
-        <button onclick="location.reload()" style="background:#222; color:#fff; border:none; padding:12px 25px; border-radius:10px; margin-top:40px;">VOLTAR AO MENU</button>
+        <h2 style="color: #28a745; font-size: 28px;">PEDIDO ENVIADO!</h2>
+        <p style="font-size: 18px;">PREPARANDO NO BALCÃO...</p>
+        <button onclick="location.reload()" style="margin-top:30px; background:#222; color:#fff; padding:12px 25px; border:none; border-radius:10px; cursor:pointer;">FAZER NOVO PEDIDO</button>
     </div>
 
     <h1>S.A. DRINKS</h1>
-    <input type="text" id="nomeCliente" class="input-cliente" placeholder="Digite seu nome para pedir...">
+    <input type="text" id="user" class="input-cliente" placeholder="Seu nome...">
 
-    <div class="container" id="menu-drinks">
-        </div>
+    <div class="container" id="lista"></div>
 
     <script>
         const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // LISTA COMPLETA DOS DRINKS E SUAS FOTOS
-        const drinks = [
+        // LISTA DOS 6 DRINKS REAIS (CONFORME SEU ESTOQUE)
+        const menu = [
             { n: "QUANTUM BLUE", c: "LONG DRINK 330ML", i: "Curaçau Blue Zero, Limão Siciliano e Soda.", img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600" },
-            { n: "PINK S.A.", c: "TAÇA GIN 480ML", i: "Morango In Natura, Alecrim e Água Tônica.", img: "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" },
-            { n: "TROPICAL YELLOW", c: "HURRICANE 400ML", i: "Abacaxi, Gengibre e Água com Gás.", img: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" },
-            { n: "GREEN VIBE", c: "COPO ROCKS 250ML", i: "Xarope de Maçã Verde, Hortelã Fresca e Soda.", img: "https://images.unsplash.com/photo-1536935338788-846bb9981813?w=600" },
-            { n: "COFFEE TONIC", c: "HIGHBALL 350ML", i: "Café Arábica, Xarope de Caramelo e Tônica.", img: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600" },
-            { n: "RED SUPREME", c: "COPO ROCKS 250ML", i: "Xarope de Açúcar, Frutas Vermelhas e Soda.", img: "https://images.unsplash.com/photo-1544145945-f904253d0c7b?w=600" },
-            { n: "SUNSET PEACH", c: "TAÇA COUPÊ 200ML", i: "Xarope de Pêssego, Suco de Laranja e Grenadine.", img: "https://images.unsplash.com/photo-1536935338788-846bb9981813?w=600" }
-        ];
-
-        const menu = document.getElementById('menu-drinks');
-        drinks.forEach(d => {
-            menu.innerHTML += `
-                <div class="card">
-                    <div class="tag-info">${d.c}</div>
-                    <div class="tag-alcool">0% ÁLCOOL</div>
-                    <img src="${d.img}" class="foto-drink" alt="${d.n}">
-                    <div class="conteudo">
-                        <div class="nome">${d.n}</div>
-                        <div class="composicao">${d.i}</div>
-                        <button class="btn-solicitar" onclick="pedir('${d.n}')">SOLICITAR DRINK</button>
-                    </div>
-                </div>`;
-        });
-
-        function pedir(drink) {
-            const cliente = document.getElementById('nomeCliente').value.trim();
-            if(!cliente) return alert("S.A. - Por favor, digite seu nome primeiro!");
-
-            document.getElementById('loading').style.display = 'flex';
-
-            const ref = db.ref('pedidos').push();
-            ref.set({
-                cliente: cliente,
-                drink: drink,
-                status: "PENDENTE",
-                timestamp: Date.now()
-            });
-
-            ref.on('value', snap => {
-                if(snap.val() && snap.val().status === "PRONTO") {
-                    document.getElementById('status-msg').innerText = "PRONTO! RETIRE NO BALCÃO!";
-                    document.getElementById('status-msg').style.color = "#28a745";
-                }
-            });
-        }
-    </script>
-</body>
-</html>
+            { n: "PINK S.A.", c: "TAÇA GIN 480ML", i: "Morango In Natura, Alecrim e Água Tônica.", img: "
+                
