@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.A. DRINKS - CARDÁPIO</title>
+    <title>S.A. DRINKS - VIP</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
@@ -17,16 +17,21 @@
         .nome { color: #28a745; font-size: 22px; font-weight: bold; margin-bottom: 5px; text-transform: uppercase; }
         .comp { color: #aaa; font-size: 14px; line-height: 1.4; margin-bottom: 18px; min-height: 40px; }
         .btn { background: #28a745; color: #fff; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 16px; text-transform: uppercase; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 1000; text-align: center; border: 4px solid #28a745; }
+        
+        /* Overlay de Notificação */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); display: none; align-items: center; justify-content: center; flex-direction: column; z-index: 1000; text-align: center; border: 4px solid #28a745; }
+        .btn-ok { background: #28a745; color: #fff; border: none; padding: 15px 40px; border-radius: 10px; margin-top: 30px; font-weight: bold; font-size: 18px; }
     </style>
 </head>
 <body>
+
+    <audio id="audioBip" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
     <div id="aviso-pronto" class="overlay">
         <h2 style="color: #28a745; font-size: 32px; margin: 0;">BEBIDA LIBERADA!</h2>
         <p style="font-size: 18px; color: #ccc;">Seu pedido já está no balcão:</p>
         <h3 id="drink-nome-pronto" style="color: #fff; font-size: 26px; text-transform: uppercase; margin: 15px 0;"></h3>
-        <button onclick="document.getElementById('aviso-pronto').style.display='none'" style="background:#222; color:#fff; padding:10px 25px; border:none; border-radius:10px; cursor:pointer;">OK</button>
+        <button class="btn-ok" onclick="fecharAviso()">RETIRAR AGORA</button>
     </div>
 
     <h1>S.A. DRINKS</h1>
@@ -35,33 +40,26 @@
     <div class="container" id="menu-lista"></div>
 
     <script>
-        // Configuração do Banco de Dados [cite: 2026-01-27]
         const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
         if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
         const db = firebase.database();
 
-        // LISTA DOS 6 DRINKS OFICIAIS (Fotos Invertidas nos dois últimos)
+        // 6 DRINKS OFICIAIS (FOTOS AJUSTADAS)
         const drinks = [
             { n: "QUANTUM BLUE", i: "Curaçau Blue Zero, Limão Siciliano e Soda.", img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=600" },
             { n: "PINK S.A.", i: "Morango In Natura, Alecrim e Água Tônica.", img: "https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=600" },
             { n: "TROPICAL YELLOW", i: "Abacaxi, Gengibre e Água com Gás.", img: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=600" },
             { n: "COFFEE TONIC", i: "Grãos de Café Arábica, Caramelo e Tônica.", img: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=600" },
-            
-            // FOTOS TROCADAS CONFORME SOLICITADO
-            // O Green Detox (com amora e frutas secas) recebe o link que estava no Sunset
             { n: "GREEN DETOX", i: "Xarope de Maçã Verde, Hortelã Fresca e Soda.", img: "https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?w=600" },
-            // O Sunset Peach (copo long drink com muito limão) recebe o link que estava no Green
             { n: "SUNSET PEACH", i: "Xarope de Pêssego, Suco de Laranja e Grenadine.", img: "https://images.unsplash.com/photo-1536935338788-846bb9981813?w=600" }
         ];
 
         const listaDiv = document.getElementById('menu-lista');
-        
-        // Renderização automática para evitar erros de tela preta
         drinks.forEach(d => {
             const card = document.createElement('div');
             card.className = 'card';
             card.innerHTML = `
-                <img src="${d.img}" class="foto" alt="${d.n}" onerror="this.src='https://via.placeholder.com/600x400/111/28a745?text=DRINK'">
+                <img src="${d.img}" class="foto" onerror="this.src='https://via.placeholder.com/600x400/111/28a745?text=DRINK'">
                 <div class="info">
                     <div class="nome">${d.n}</div>
                     <div class="comp">${d.i}</div>
@@ -71,11 +69,14 @@
             listaDiv.appendChild(card);
         });
 
-        // Função de Pedido com Monitoramento em Tempo Real
         function pedir(drink) {
             const cliente = document.getElementById('user').value.trim();
-            if(!cliente) return alert("S.A. - Por favor, digite seu nome primeiro!");
-            
+            if(!cliente) return alert("S.A. - Por favor, digite seu nome!");
+
+            // Ativa o som no clique (exigência dos navegadores) [cite: 2026-01-23]
+            const bip = document.getElementById('audioBip');
+            bip.play().then(() => { bip.pause(); bip.currentTime = 0; });
+
             const novoPedidoRef = db.ref('pedidos').push({
                 cliente: cliente,
                 drink: drink,
@@ -83,16 +84,20 @@
                 timestamp: Date.now()
             });
 
-            // ESCUTA O PAINEL: Atualiza sozinho quando o barman clica em "PRONTO"
             novoPedidoRef.on('value', (snap) => {
                 const pedido = snap.val();
                 if(pedido && pedido.status === "PRONTO") {
                     document.getElementById('drink-nome-pronto').innerText = pedido.drink;
                     document.getElementById('aviso-pronto').style.display = 'flex';
+                    // TOCA O BIP QUANDO O BARMAN LIBERA
+                    bip.play(); 
                 }
             });
+            alert("Pedido enviado! Aguarde o BIP.");
+        }
 
-            alert("Pedido enviado! Fique de olho nesta tela.");
+        function fecharAviso() {
+            document.getElementById('aviso-pronto').style.display = 'none';
         }
     </script>
 </body>
