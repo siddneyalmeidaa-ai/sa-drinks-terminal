@@ -3,27 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>S.A. DRINKS - EXPERIENCE V2.3</title>
+    <title>S.A. DRINKS - EXPERIENCE V2.4</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        :root { --primary: #28a745; --accent: #ff9f43; --neon: #00ff41; --glass: rgba(255,255,255,0.05); }
+        :root { --primary: #28a745; --accent: #ff9f43; --neon: #00ff41; }
         body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 15px; }
         #app { max-width: 450px; margin: auto; }
         .header { text-align: center; padding: 25px 0; border-bottom: 1px solid #222; margin-bottom: 25px; }
         .logo { font-size: 28px; font-weight: bold; letter-spacing: 4px; color: var(--primary); text-shadow: 0 0 10px rgba(40, 167, 69, 0.4); }
-        .input-nome { width: 100%; padding: 18px; margin-bottom: 25px; border: 1px solid #333; background: #111; color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; transition: 0.3s; }
-        .input-nome:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(40, 167, 69, 0.2); }
+        .input-nome { width: 100%; padding: 18px; margin-bottom: 25px; border: 1px solid #333; background: #111; color: #fff; border-radius: 12px; box-sizing: border-box; font-size: 16px; outline: none; }
         .card { background: #111; border-radius: 20px; overflow: hidden; margin-bottom: 30px; border: 1px solid #222; position: relative; }
         .img-container { width: 100%; height: 240px; background-size: cover; background-position: center; position: relative; display: flex; align-items: flex-end; background-color: #1a1a1a; }
         .overlay-glass { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(0deg, #111 5%, transparent 60%); }
         .tag-zero { position: absolute; top: 15px; right: 15px; background: var(--accent); color: #000; padding: 6px 14px; border-radius: 20px; font-size: 10px; font-weight: bold; text-transform: uppercase; z-index: 5; }
-        .tag-copo { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 9px; border: 1px solid #444; backdrop-filter: blur(5px); z-index: 5; }
+        .tag-copo { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); color: #fff; padding: 6px 12px; border-radius: 8px; font-size: 9px; border: 1px solid #444; z-index: 5; }
         .info { padding: 20px; position: relative; z-index: 6; }
         .nome { font-size: 22px; font-weight: bold; color: var(--primary); display: block; margin-bottom: 5px; }
-        .ingredientes { font-size: 13px; color: #aaa; line-height: 1.5; margin-bottom: 20px; display: block; min-height: 40px; font-style: italic; }
-        .btn { background: var(--primary); color: #fff; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: bold; text-transform: uppercase; cursor: pointer; font-size: 14px; transition: 0.3s; }
-        .btn:active { transform: scale(0.98); background: #218838; }
+        .ingredientes { font-size: 13px; color: #aaa; line-height: 1.5; margin-bottom: 20px; display: block; min-height: 40px; }
+        .btn { background: var(--primary); color: #fff; border: none; padding: 18px; width: 100%; border-radius: 12px; font-weight: bold; text-transform: uppercase; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -73,7 +71,7 @@
             </div>
 
             <div class="card">
-                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=500&q=80');">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=500&q=80');">
                     <div class="tag-zero">0% ÁLCOOL</div>
                     <div class="tag-copo">COPO HURRICANE 400ML</div>
                     <div class="overlay-glass"></div>
@@ -99,7 +97,7 @@
             </div>
             
             <div class="card">
-                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1551538827-9c037cb4f32a?auto=format&fit=crop&w=500&q=80');">
+                <div class="img-container" style="background-image: url('https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=500&q=80');">
                     <div class="tag-zero">0% ÁLCOOL</div>
                     <div class="tag-copo">COPO HIGHBALL 350ML</div>
                     <div class="overlay-glass"></div>
@@ -127,7 +125,7 @@
                 status: "pendente",
                 timestamp: Date.now()
             }).then(() => {
-                alert("Pedido de " + drinkNome + " enviado com sucesso!");
+                alert("Pedido de " + drinkNome + " enviado!");
             });
         }
     </script>
