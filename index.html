@@ -3,108 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>S.A. DRINKS - CARDÁPIO</title>
+    <title>S.A. DRINKS - CLIENTE</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
-        :root { --primary: #28a745; --accent: #ff9f43; }
+        :root { --green: #28a745; --orange: #ff9f43; }
         body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 15px; }
-        .card { background: #111; border-radius: 15px; margin-bottom: 20px; overflow: hidden; border: 1px solid #222; }
-        .img { width: 100%; height: 200px; background-size: cover; background-position: center; }
+        .card { background: #111; border-radius: 15px; margin-bottom: 20px; border: 1px solid #222; overflow: hidden; }
+        .img { width: 100%; height: 180px; background-size: cover; background-position: center; }
         .info { padding: 15px; }
-        .nome { color: var(--primary); font-size: 20px; font-weight: bold; display: block; }
-        .desc { color: #888; font-size: 12px; margin-top: 5px; display: block; min-height: 32px; }
-        .btn { background: var(--primary); color: #fff; border: none; padding: 16px; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 15px; cursor: pointer; }
-        #espera { display: none; text-align: center; padding-top: 100px; }
-        .loader { border: 4px solid #222; border-top: 4px solid var(--primary); width: 40px; height: 40px; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
+        .nome { color: var(--green); font-size: 18px; font-weight: bold; }
+        .btn { background: var(--green); color: #fff; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        #tela-espera { display: none; text-align: center; padding-top: 100px; }
+        .loader { border: 4px solid #222; border-top: 4px solid var(--green); width: 40px; height: 40px; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div id="app">
-        <div id="menu">
-            <h2 style="text-align:center; color: var(--primary); letter-spacing: 2px;">S.A. DRINKS</h2>
-            <input type="text" id="username" placeholder="Seu nome..." style="width:100%; padding:15px; margin-bottom:20px; background:#111; color:#fff; border:1px solid #333; border-radius:10px; box-sizing: border-box;">
-            
-            <div id="lista">
-                </div>
-        </div>
+    <div id="menu">
+        <h2 style="text-align:center; color: var(--green);">S.A. DRINKS</h2>
+        <input type="text" id="clienteNome" placeholder="Seu nome..." style="width:100%; padding:15px; margin-bottom:20px; background:#111; color:#fff; border:1px solid #333; border-radius:10px; box-sizing: border-box;">
+        
+        <div id="lista-drinks">
+            </div>
+    </div>
 
-        <div id="espera">
-            <h2 id="status-h">PEDIDO ENVIADO!</h2>
-            <div class="loader" id="loading-circle"></div>
-            <p id="status-p" style="color: var(--accent); font-weight: bold; font-size: 18px;">PREPARANDO NO BALCÃO...</p>
-            <p id="drink-info" style="color: #555; font-size: 14px;"></p>
-            <button onclick="location.reload()" style="background:#222; color:#fff; border:none; padding:15px; border-radius:10px; width:100%; margin-top:50px;">NOVO PEDIDO</button>
-        </div>
+    <div id="tela-espera">
+        <h2 id="status-txt">PEDIDO ENVIADO!</h2>
+        <div class="loader" id="roda"></div>
+        <p id="msg-espera" style="color: var(--orange); font-weight: bold;">PREPARANDO NO BALCÃO...</p>
+        <button onclick="location.reload()" style="background:#222; color:#fff; border:none; padding:10px; border-radius:5px; margin-top:50px;">NOVO PEDIDO</button>
     </div>
 
     <script>
-        // Configuração conectada ao seu Terminal Master
         const firebaseConfig = { databaseURL: "https://sa-drinks-terminal-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Dados baseados nos insumos e copos reais
+        // Lista baseada na sua logística de insumos
         const drinks = [
-            { n: "PINK S.A.", i: "Morango in natura, Alecrim, Xarope de Morango e Tônica.", img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500" },
-            { n: "QUANTUM BLUE", i: "Curaçau Blue Zero, Limão Siciliano e Soda.", img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=500" },
-            { n: "TROPICAL YELLOW", i: "Abacaxi, Gengibre, Xarope de Gengibre e Água com Gás.", img: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500" },
-            { n: "GREEN VIBE", i: "Xarope de Maçã Verde, Hortelã Fresca e Soda.", img: "https://images.unsplash.com/photo-1544145945-f904253d0c7b?w=500" },
-            { n: "SUNSET PEACH", i: "Xarope de Pêssego, Limão Taiti e Soda.", img: "https://images.unsplash.com/photo-1536935338788-846bb9981813?w=500" },
-            { n: "COFFEE TONIC", i: "Grãos de Café Arábica, Xarope de Caramelo e Tônica.", img: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=500" }
+            { n: "PINK S.A.", i: "Morango, Alecrim, Xarope de Morango e Tônica.", img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400" },
+            { n: "QUANTUM BLUE", i: "Curaçau Blue Zero, Limão Siciliano e Soda.", img: "https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=400" },
+            { n: "TROPICAL YELLOW", i: "Abacaxi, Gengibre e Água com Gás.", img: "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=400" },
+            { n: "GREEN VIBE", i: "Xarope de Maçã Verde, Hortelã e Soda.", img: "https://images.unsplash.com/photo-1544145945-f904253d0c7b?w=400" },
+            { n: "SUNSET PEACH", i: "Pêssego, Limão Taiti e Soda.", img: "https://images.unsplash.com/photo-1536935338788-846bb9981813?w=400" },
+            { n: "COFFEE TONIC", i: "Grãos de Café, Caramelo e Tônica.", img: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=400" }
         ];
 
-        const lista = document.getElementById('lista');
+        const container = document.getElementById('lista-drinks');
         drinks.forEach(d => {
-            lista.innerHTML += `
+            container.innerHTML += `
                 <div class="card">
                     <div class="img" style="background-image:url('${d.img}')"></div>
                     <div class="info">
-                        <span class="nome">${d.n}</span>
-                        <span class="desc">${d.i}</span>
-                        <button class="btn" onclick="fazerPedido('${d.n}')">SOLICITAR DRINK</button>
+                        <span class="nome">${d.n}</span><br>
+                        <small style="color:#666">${d.i}</small>
+                        <button class="btn" onclick="enviar('${d.n}')">SOLICITAR DRINK</button>
                     </div>
                 </div>`;
         });
 
-        function bip() {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-            osc.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.4);
-            if(navigator.vibrate) navigator.vibrate([300, 100, 300]);
-        }
+        function enviar(drinkNome) {
+            const nome = document.getElementById('clienteNome').value.trim();
+            if(!nome) return alert("S.A. - Informe seu nome!");
 
-        function fazerPedido(drink) {
-            const nome = document.getElementById('username').value.trim();
-            if(!nome) return alert("S.A. - Digite seu nome primeiro!");
-
-            // Envia para o nó 'pedidos' que seu painel lê
-            const ref = db.ref('pedidos').push();
-            ref.set({
+            // O pulo do gato: Gravar na pasta 'pedidos' que o painel master vigia
+            const novoPedidoRef = db.ref('pedidos').push();
+            novoPedidoRef.set({
                 cliente: nome,
-                drink: drink,
+                drink: drinkNome,
                 status: "PENDENTE",
-                timestamp: Date.now()
+                hora: new Date().toLocaleTimeString()
             });
 
             document.getElementById('menu').style.display = 'none';
-            document.getElementById('espera').style.display = 'block';
-            document.getElementById('drink-info').innerText = nome + " | " + drink;
+            document.getElementById('tela-espera').style.display = 'block';
 
-            // Escuta a sua liberação manual no balcão
-            ref.on('value', snap => {
-                const data = snap.val();
-                if(data && data.status === "PRONTO") {
-                    bip();
-                    document.getElementById('status-h').innerText = "PRONTO!";
-                    document.getElementById('status-p').innerText = "RETIRE NO BALCÃO!";
-                    document.getElementById('status-p').style.color = "#28a745";
-                    document.getElementById('loading-circle').style.display = 'none';
+            // Escuta quando VOCÊ libera o drink no balcão
+            novoPedidoRef.on('value', snap => {
+                if(snap.val() && snap.val().status === "PRONTO") {
+                    document.getElementById('status-txt').innerText = "PRONTO!";
+                    document.getElementById('msg-espera').innerText = "RETIRE NO BALCÃO!";
+                    document.getElementById('msg-espera').style.color = var(--green);
+                    document.getElementById('roda').style.display = 'none';
+                    if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
                 }
             });
         }
