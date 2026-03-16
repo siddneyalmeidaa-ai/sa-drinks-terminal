@@ -9,34 +9,21 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #0a0a0a; color: white; padding: 15px; }
         h1, h2 { color: #28a745; text-transform: uppercase; border-bottom: 2px solid #1a1a1a; padding-bottom: 10px; letter-spacing: 1px; }
-        
         #lista-pedidos { display: grid; gap: 10px; }
-        
         .pedido-card { 
-            background: #161616; 
-            border-left: 6px solid #28a745; 
-            padding: 15px; 
-            border-radius: 10px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            background: #161616; border-left: 6px solid #28a745; padding: 15px; 
+            border-radius: 10px; display: flex; justify-content: space-between; 
+            align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-
         .cliente-nome { color: #28a745; font-weight: bold; font-size: 22px; display: block; }
         .drink-info { font-size: 18px; color: #fff; margin: 5px 0; display: block; }
-        
-        /* Caixa de Receita Injetada */
         .receita-box { font-size: 12px; color: #ffc107; background: #222; padding: 8px; border-radius: 6px; margin: 8px 0; border: 1px solid #333; }
-
         .tempo-container { margin-top: 8px; font-size: 13px; color: #888; display: flex; gap: 15px; }
         .cronometro { font-weight: bold; padding: 2px 6px; border-radius: 4px; background: #222; }
-
         .btn-ready { 
             background: #28a745; color: white; border: none; padding: 15px 25px; 
             border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; 
         }
-        
         #relatorio { background: #111; padding: 20px; border-radius: 12px; margin-top: 40px; border: 1px solid #333; }
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-top: 15px; }
         .stat-box { background: #1c1c1c; padding: 15px; border-radius: 10px; text-align: center; }
@@ -62,20 +49,20 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Receituário 100% Sem Álcool Injetado
+        // Receituário S.A. Ajustado
         const RECEITUARIO = {
-            "QUANTUM BLUE": "🔵 Curaçau Blue, Limão Taiti e Soda.",
-            "PINK S.A.": "💗 Morango, Alecrim e Tônica.",
-            "TROPICAL YELLOW": "🟡 Gengibre, Limão Siciliano e Água com Gás.",
-            "GREEN DETOX": "🟢 Maçã Verde, Hortelã e Água com Gás.",
-            "COFFEE TONIC": "☕ Café Concentrado e Tônica Premium.",
-            "SUNSET PEACH": "🟠 Pêssego, Suco de Laranja e Grenadine no fundo."
+            "QUANTUM BLUE": "🔵 Curaçau Blue Zero, Limão Siciliano e Soda.",
+            "PINK S.A.": "💗 Morango In Natura, Alecrim e Tônica.",
+            "TROPICAL YELLOW": "🟡 Abacaxi, Gengibre e Água com Gás.",
+            "GREEN VIBE": "🟢 Maçã Verde, Hortelã e Soda.",
+            "COFFEE TONIC": "☕ Café Arábica, Caramelo e Tônica.",
+            "SUNSET PEACH": "🟠 Pêssego, Limão Taiti e Soda."
         };
 
         function calcularTempo(ts) {
             if(!ts) return "0m";
             const diff = Math.floor((new Date().getTime() - ts) / 60000);
-            return diff;
+            return diff > 0 ? diff : 0;
         }
 
         setInterval(() => {
@@ -101,9 +88,12 @@
                 const p = item.val();
                 const id = item.key;
                 
-                if(p.status === "pendente") {
-                    const ts = p.timestamp || new Date().getTime();
-                    const receita = RECEITUARIO[p.drink] || "Sem álcool - Receita padrão.";
+                // Normalização do Status para capturar tudo
+                const statusNormalizado = p.status ? p.status.toLowerCase() : "";
+
+                if(statusNormalizado === "pendente" || statusNormalizado === "preparando") {
+                    const ts = p.timestamp || p.data || new Date().getTime();
+                    const receita = RECEITUARIO[p.drink] || "Receita padrão S.A.";
 
                     lista.innerHTML += `
                         <div class="pedido-card">
